@@ -63,7 +63,13 @@ public class RaidPhpParser {
             System.out.println("sib="+sib.text());
             sib = sib.nextElementSibling();
         }
-
+        
+        Element kunarkTable = kunarkCell.parent().parent();
+        Element trakCell = kunarkTable.child(1).child(0).child(0);
+        
+        System.out.println("trak cell text = "+trakCell.text());
+        
+        
     }
 
     public static void main(String[] args) throws IOException {

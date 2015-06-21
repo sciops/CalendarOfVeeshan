@@ -38,15 +38,31 @@ public class RaidPhpParser {
         if ((url == null) || (url == "")) {
             url = URL;
         }
+        //fetch the document and map to DOM
         Document doc = Jsoup.connect(url).get();
+        
+        //testing jsoup, print the html Title tag
         String output = "\nTitle: " + doc.title();
         System.out.println(output);
-        Element body = doc.body();
-        //get the first node that contains the text "Kunark"
+        
+        //get the first cell that contains the text "Kunark"
         Element kunarkCell = doc.select("td:containsOwn(kunark)").first();
         output = kunarkCell.text();
-       
-        System.out.println("text: "+output);
+        System.out.println("kunark cell text: "+output);
+        
+        //get Next Spawn cell, Kunark's sibling
+        /*
+        Element nextSpawnCell = kunarkCell.nextElementSibling();
+        output = nextSpawnCell.text();
+        System.out.println("next spawn text: "+output);
+        */
+                
+        //get the rest of the siblings
+        Element sib = kunarkCell.nextElementSibling();
+        while (sib != null) {
+            System.out.println("sib="+sib.text());
+            sib = sib.nextElementSibling();
+        }
 
     }
 

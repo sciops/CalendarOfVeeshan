@@ -5,13 +5,12 @@
  */
 package com.monco.calendarofveeshan;
 
-import java.util.List;
-
 /**
  *
  * @author stephen.williams@monco.info
  */
-public class Guild {
-    private String name;
-    private String raidClass;
+public class Lockout {
+    private RaidTarget raidtarget;
+    private Guild guild;
+    private int remainingLockouts;
 }

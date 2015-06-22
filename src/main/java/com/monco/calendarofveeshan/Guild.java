@@ -14,4 +14,5 @@ import java.util.List;
 public class Guild {
     private String name;
     private String raidClass;
+    private List<Lockout> lockouts;
 }

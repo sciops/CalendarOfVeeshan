@@ -12,11 +12,15 @@ import org.apache.commons.lang3.time.DateUtils;
 /**
  *
  * @author stephen.williams@monco.info
+ *
+ * This entity class represents a row on one of the tables on raid.php
  */
 public class RaidTarget {
 
-    private String name;
-    private String nxSpawnClass;
+    private String name;//represents the raid target's name cell
+    private String nxSpawnClass;//represents the next spawn class cell
+    private List<Lockout> lockouts; //represents the lockouts cell
+
     private Date killTime;
     private Date nxAvgSpawnTime;
     private Date windowOpen;
@@ -27,16 +31,24 @@ public class RaidTarget {
     private final int STD_RESPAWN_HOURS = HOURS_7DAY;
     private final int STD_RESPAWN_WINDOW = 8;
 
-    public RaidTarget(String name, String nxSpawnClass, Date killTime) {
+    public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts) {
         this.name = name;
         this.nxSpawnClass = nxSpawnClass;
+        this.lockouts = lockouts;
+    }
+
+    public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts, Date killTime) {
+        this.name = name;
+        this.nxSpawnClass = nxSpawnClass;
+        this.lockouts = lockouts;
         setTimes(killTime);
     }
 
-    public RaidTarget(String name, String nxSpawnClass, Date killTime, int respawnHours, int respawnWindow) {
+    public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts, Date killTime, int respawnHours, int respawnWindow) {
         this.name = name;
         this.nxSpawnClass = nxSpawnClass;
-        setTimes(killTime,respawnHours,respawnWindow);
+        this.lockouts = lockouts;
+        setTimes(killTime, respawnHours, respawnWindow);
     }
 
     public void setTimes(Date killTime) {

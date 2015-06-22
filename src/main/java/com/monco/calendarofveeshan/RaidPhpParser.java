@@ -6,6 +6,9 @@
 package com.monco.calendarofveeshan;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -63,11 +66,45 @@ public class RaidPhpParser {
             System.out.println("sib="+sib.text());
             sib = sib.nextElementSibling();
         }
-        
+               
+        //get Trak's name cell
         Element kunarkTable = kunarkCell.parent().parent();
-        Element trakCell = kunarkTable.child(1).child(0).child(0);
+        Element trakCell = kunarkTable.child(1).child(0);//zero based indexes, this gets the second row/tr (1) and the first column/td (0)
+        String trakName = trakCell.text();
+        System.out.println("trak cell text = "+trakName);
         
-        System.out.println("trak cell text = "+trakCell.text());
+        //get Trak's class
+        Element trakClassCell = kunarkTable.child(1).child(1);
+        String trakClass = trakClassCell.text();
+        
+        //get Trak's trakLockouts
+        List<Lockout> trakLockouts = new ArrayList();
+        Element trakLockoutCell = kunarkTable.child(1).child(2);
+        String lockoutsText = trakLockoutCell.text();
+        System.out.println("lockOuts text = "+lockoutsText);
+        List<String> guildLOPairs = Arrays.asList(lockoutsText.split("\\s*;\\s*"));//break this up by semi-colons
+        List<String> splitGuildLOPair = new ArrayList();
+        for (String guildLOPair:guildLOPairs) {
+            System.out.println("guildLOPair="+guildLOPair);
+            splitGuildLOPair = Arrays.asList(guildLOPair.split("\\s*[(]\\s*"));
+            int LO = Integer.parseInt(splitGuildLOPair.get(1).replaceAll("[\\D]", ""));
+            System.out.println("LO="+LO);
+            //create a new Guild instance to fill the trakLockouts.
+            //TODO: first populate an array of Guild objects, search for the Guild, then insert here
+            Guild guild = new Guild(splitGuildLOPair.get(0),"Class Whatever");
+            //create and add a lockout to the list
+            trakLockouts.add(new Lockout(guild,LO));
+        }
+        
+        //debug trakLockouts list
+        for (Lockout l:trakLockouts) {
+            System.out.println(l.toString());
+        }
+        
+        RaidTarget trak = new RaidTarget(trakName,trakClass,trakLockouts);
+        
+        System.out.println(trak);
+        
         
         
     }

@@ -90,4 +90,11 @@ public class RaidTarget {
         return windowClose;
     }
 
+    @Override
+    public String toString() {
+        return "RaidTarget{" + "name=" + name + ", nxSpawnClass=" + nxSpawnClass + ", lockouts=" + lockouts + ", killTime=" + killTime + ", nxAvgSpawnTime=" + nxAvgSpawnTime + ", windowOpen=" + windowOpen + ", windowClose=" + windowClose + '}';
+    }
+
+    
+    
 }

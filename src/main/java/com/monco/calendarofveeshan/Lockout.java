@@ -13,4 +13,24 @@ public class Lockout {
     private RaidTarget raidtarget;
     private Guild guild;
     private int remainingLockouts;
+
+    public Lockout(Guild guild, int remainingLockouts) {
+        this.guild = guild;
+        this.remainingLockouts = remainingLockouts;
+    }
+
+    public Lockout(RaidTarget raidtarget, Guild guild, int remainingLockouts) {
+        this.raidtarget = raidtarget;
+        this.guild = guild;
+        this.remainingLockouts = remainingLockouts;
+    }
+
+    @Override
+    public String toString() {
+        return "Lockout{" + "raidtarget=" + raidtarget + ", guild=" + guild + ", remainingLockouts=" + remainingLockouts + '}';
+    }
+    
+    
+    
+    
 }

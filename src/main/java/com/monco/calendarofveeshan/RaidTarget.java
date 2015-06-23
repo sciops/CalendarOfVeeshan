@@ -31,6 +31,11 @@ public class RaidTarget {
     private final int STD_RESPAWN_HOURS = HOURS_7DAY;
     private final int STD_RESPAWN_WINDOW = 8;
 
+    public RaidTarget(String name, String nxSpawnClass) {
+        this.name = name;
+        this.nxSpawnClass = nxSpawnClass;
+    }
+
     public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts) {
         this.name = name;
         this.nxSpawnClass = nxSpawnClass;
@@ -66,6 +71,10 @@ public class RaidTarget {
         windowOpen = DateUtils.addHours(killTime, (-1) * (respawnWindow / 2));
     }
 
+    public void setLockouts(List<Lockout> lockouts) {
+        this.lockouts = lockouts;
+    }
+
     public String getName() {
         return name;
     }
@@ -93,14 +102,10 @@ public class RaidTarget {
     public List<Lockout> getLockouts() {
         return lockouts;
     }
-    
-    
 
     @Override
     public String toString() {
-        return "RaidTarget{" + "name=" + name + ", nxSpawnClass=" + nxSpawnClass + ", lockouts=" + lockouts + ", killTime=" + killTime + ", nxAvgSpawnTime=" + nxAvgSpawnTime + ", windowOpen=" + windowOpen + ", windowClose=" + windowClose + '}';
+        return name;
     }
 
-    
-    
 }

@@ -103,6 +103,7 @@ public class RaidPhpParser {
             //zero based indexes, this gets the second row/tr (1) and the first column/td (0)
             String targetName = table.child(row).child(0).text();
             String targetClass = table.child(row).child(1).text();
+            RaidTarget rt = new RaidTarget(targetName, targetClass);
             List<Lockout> targetLockouts = new ArrayList();
 
             //get target's lockouts
@@ -132,14 +133,15 @@ public class RaidPhpParser {
                     }
                 }
                 //create and add a lockout to the list
-                Lockout lockout = new Lockout(guild, LO);
+                Lockout lockout = new Lockout(rt, guild, LO);
                 lockouts.add(lockout);
                 targetLockouts.add(lockout);
             }
             //debug LO list
             //for (Lockout l : targetLockouts) {System.out.println(l.toString());}
-            RaidTarget rt = new RaidTarget(targetName, targetClass, targetLockouts);
+            rt.setLockouts(targetLockouts);
             raidTargets.add(rt);
+            
         }//kunark table loop
 
         return raidTargets;

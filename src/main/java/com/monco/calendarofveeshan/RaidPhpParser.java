@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,6 +25,14 @@ public class RaidPhpParser {
 
     final String URL = "https://www.project1999.com/raid.php";
 
+    //list for storing all the RaidTargets on the page
+    List<RaidTarget> raidTargets = new ArrayList();
+    //list for storing all the guilds on the page
+    List<Guild> guilds = new ArrayList() {
+    };
+    //list of lockouts
+    List<Lockout> lockouts = new ArrayList();
+
     public void crawl() throws IOException {
         crawl(URL);
     }
@@ -34,23 +45,19 @@ public class RaidPhpParser {
         Document doc = Jsoup.connect(url).get();
 
         //Parse the guilds
-        List<Guild> guilds = new ArrayList();
         int height = 7;
         Element classCTable = selectTable(doc, "Class C Guilds");
         guilds.addAll(mapGuildTable(height, classCTable, "Class C"));
         height = 12;
         Element classRTable = selectTable(doc, "Class R Guilds");
         guilds.addAll(mapGuildTable(height, classRTable, "Class R"));
-        
+
         //debug guilds
         String outputGuilds = "";
         for (Guild g : guilds) {
-            outputGuilds+="\n"+g.getName()+", "+g.getRaidClass();
+            outputGuilds += "\n" + g.getName() + ", " + g.getRaidClass();
         }
         System.out.println(outputGuilds);
-
-        //list for storing all the RaidTargets on the page
-        List<RaidTarget> raidTargets = new ArrayList();
 
         //Parse the Kunark spawns table
         //get the table
@@ -73,7 +80,7 @@ public class RaidPhpParser {
         //debug raidTargets
         String outputTargets = "";
         for (RaidTarget rt : raidTargets) {
-            outputTargets += "\n" + rt.getName() + ", " + rt.getNxSpawnClass();
+            outputTargets += "\n" + rt.getName() + ", " + rt.getNxSpawnClass() + ", " + rt.getLockouts();
         }
         System.out.println(outputTargets);
 
@@ -96,10 +103,9 @@ public class RaidPhpParser {
             //zero based indexes, this gets the second row/tr (1) and the first column/td (0)
             String targetName = table.child(row).child(0).text();
             String targetClass = table.child(row).child(1).text();
-            //System.out.println("name=" + targetName+" class=" + targetClass);
+            List<Lockout> targetLockouts = new ArrayList();
 
             //get target's lockouts
-            List<Lockout> targetLockouts = new ArrayList();
             String targetLOText = table.child(row).child(2).text();
             //System.out.println("lockOuts text = " + targetLOText);
             //break this up by semi-colons, result is an array of strings containing unsplit guild/lockout pairs e.g. "Taken (1)"
@@ -115,9 +121,20 @@ public class RaidPhpParser {
                 //System.out.println("LO=" + LO);
                 //create a new Guild instance to fill the trakLockouts.
                 //TODO: first populate an array of Guild objects, search for the Guild, then insert here
-                Guild guild = new Guild(splitGuildLOPair.get(0), "Class Whatever");
+                //find guild
+                Guild guild = null;
+                String guildName = splitGuildLOPair.get(0);
+                guildName = remSpace(guildName);
+                //System.out.println("GUILDNAME=<" + guildName + ">");
+                for (Guild g : guilds) {
+                    if (guildName.equals(g.getName())) {
+                        guild = g;
+                    }
+                }
                 //create and add a lockout to the list
-                targetLockouts.add(new Lockout(guild, LO));
+                Lockout lockout = new Lockout(guild, LO);
+                lockouts.add(lockout);
+                targetLockouts.add(lockout);
             }
             //debug LO list
             //for (Lockout l : targetLockouts) {System.out.println(l.toString());}
@@ -132,9 +149,16 @@ public class RaidPhpParser {
         List<Guild> guilds = new ArrayList();
         for (int row = 1; row < height; row++) {
             String guName = table.child(row).child(0).text();
+            guName = remSpace(guName);
             guilds.add(new Guild(guName, raidClass));
         }
         return guilds;
+    }
+
+    private String remSpace(String string) {
+        string = StringUtils.deleteWhitespace(string);//https://stackoverflow.com/questions/5455794/removing-whitespace-from-strings-in-java
+        string = string.replace("\u00a0", "");//https://stackoverflow.com/questions/8501072/string-unicode-remove-char-from-the-string
+        return string;
     }
 
     public static void main(String[] args) throws IOException {

@@ -27,7 +27,7 @@ public class Lockout {
 
     @Override
     public String toString() {
-        return "Lockout{" + "raidtarget=" + raidtarget + ", guild=" + guild + ", remainingLockouts=" + remainingLockouts + '}';
+        return "Lockout{" + "target=" + raidtarget + ", " + guild + ", " + remainingLockouts + '}';
     }
     
     

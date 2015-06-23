@@ -14,7 +14,7 @@ import java.util.List;
 public class Guild {
     private String name;
     private String raidClass;
-    private List<Lockout> lockouts;
+    //private List<Lockout> lockouts;
 
     public Guild(String name, String raidClass) {
         this.name = name;
@@ -29,21 +29,15 @@ public class Guild {
         return raidClass;
     }
 
-    public List<Lockout> getLockouts() {
-        return lockouts;
-    }
 
     public void setRaidClass(String raidClass) {
         this.raidClass = raidClass;
     }
 
-    public void setLockouts(List<Lockout> lockouts) {
-        this.lockouts = lockouts;
-    }
 
     @Override
     public String toString() {
-        return "Guild{" + "name=" + name + ", raidClass=" + raidClass + ", lockouts=" + lockouts + '}';
+        return "Guild{" + name + ", "+ raidClass + '}';
     }
     
     

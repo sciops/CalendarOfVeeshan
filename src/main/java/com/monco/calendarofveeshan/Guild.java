@@ -37,7 +37,7 @@ public class Guild {
 
     @Override
     public String toString() {
-        return "Guild{" + name + ", "+ raidClass + '}';
+        return "\n" + name + ", "+ raidClass ;
     }
     
     

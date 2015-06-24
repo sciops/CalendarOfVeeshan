@@ -105,7 +105,7 @@ public class RaidTarget {
 
     @Override
     public String toString() {
-        return name;
+        return "\n"+name+", "+nxSpawnClass;
     }
 
 }

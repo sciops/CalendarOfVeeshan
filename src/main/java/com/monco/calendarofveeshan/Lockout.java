@@ -27,7 +27,7 @@ public class Lockout {
 
     @Override
     public String toString() {
-        return "Lockout{" + "target=" + raidtarget + ", " + guild + ", " + remainingLockouts + '}';
+        return "\n" + raidtarget.getName()+", "+ raidtarget.getNxSpawnClass() + ", " + guild.getName() + ", " + remainingLockouts;
     }
     
     

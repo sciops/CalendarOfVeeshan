@@ -8,14 +8,12 @@ package com.monco.calendarofveeshan;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.NavigableSet;
-import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  *
@@ -25,6 +23,8 @@ public class RaidPhpParser {
 
     final String URL = "https://www.project1999.com/raid.php";
 
+    Date retrieved = new Date();//time of allocation
+    
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList();
     //list for storing all the guilds on the page
@@ -32,6 +32,8 @@ public class RaidPhpParser {
     };
     //list of lockouts
     List<Lockout> lockouts = new ArrayList();
+    //place to store the above lists
+    RaidPhpPage rpp = new RaidPhpPage(raidTargets,guilds,lockouts, retrieved);
 
     public void crawl() throws IOException {
         crawl(URL);
@@ -52,13 +54,6 @@ public class RaidPhpParser {
         Element classRTable = selectTable(doc, "Class R Guilds");
         guilds.addAll(mapGuildTable(height, classRTable, "Class R"));
 
-        //debug guilds
-        String outputGuilds = "";
-        for (Guild g : guilds) {
-            outputGuilds += "\n" + g.getName() + ", " + g.getRaidClass();
-        }
-        System.out.println(outputGuilds);
-
         //Parse the Kunark spawns table
         //get the table
         Element kunarkTable = selectTable(doc, "Kunark");
@@ -73,16 +68,11 @@ public class RaidPhpParser {
         raidTargets.addAll(mapSpawnTable(height, planesTable));
 
         //Parse the Classic spawns table
-        Element classicTable = selectTable(doc, "Planes");
+        Element classicTable = selectTable(doc, "Classic");
         height = 3;
         raidTargets.addAll(mapSpawnTable(height, classicTable));
 
-        //debug raidTargets
-        String outputTargets = "";
-        for (RaidTarget rt : raidTargets) {
-            outputTargets += "\n" + rt.getName() + ", " + rt.getNxSpawnClass() + ", " + rt.getLockouts();
-        }
-        System.out.println(outputTargets);
+        System.out.println(rpp);
 
     }
 

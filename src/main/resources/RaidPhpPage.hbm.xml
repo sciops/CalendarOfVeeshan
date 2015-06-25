@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="RaidPhpPage" table="raidphppage">
+        <meta attribute="class-description">
+            This class contains the Raid.php page 
+        </meta>
+        <id name="page_id" type="int" column="page_id">
+            <generator class="native" />
+        </id>
+        <property name="timeRetrieved" type="timestamp">
+            <column name="timeRetrieved" not-null="true" />
+        </property>
+
+    </class>
+</hibernate-mapping>

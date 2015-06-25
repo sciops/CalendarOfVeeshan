@@ -7,6 +7,7 @@ package com.monco.calendarofveeshan;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -16,6 +17,7 @@ import java.util.List;
  *
  */
 public class RaidPhpPage {
+
     List<RaidTarget> raidTargets;
     List<Guild> guilds;
     List<Lockout> lockouts;
@@ -27,8 +29,6 @@ public class RaidPhpPage {
         this.lockouts = lockouts;
         this.timeRetrieved = timeRetrieved;
     }
-    
-    
 
     public List<RaidTarget> getRaidTargets() {
         return raidTargets;
@@ -64,12 +64,34 @@ public class RaidPhpPage {
 
     @Override
     public String toString() {
-        String string = "\nRaidPhpPage\n\nTargets\n" + raidTargets
+        String string = "\nRaidPhpPage " + timeRetrieved.getTime()
+                + "\n\nTargets\n" + raidTargets
                 + "\n\nGuilds\n" + guilds
                 + "\n\nLockouts\n" + lockouts;
         return string;
     }
+
+    @Override
+    public boolean equals(Object obj) {//does not include timeRetrieved
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RaidPhpPage other = (RaidPhpPage) obj;
+        if (!Objects.equals(this.raidTargets, other.raidTargets)) {
+            return false;
+        }
+        if (!Objects.equals(this.guilds, other.guilds)) {
+            return false;
+        }
+        if (!Objects.equals(this.lockouts, other.lockouts)) {
+            return false;
+        }
+        return true;
+    }
     
     
-    
+
 }

@@ -5,6 +5,8 @@
  */
 package com.monco.calendarofveeshan;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +26,7 @@ public class RaidPhpParser {
     final String URL = "https://www.project1999.com/raid.php";
 
     Date retrieved = new Date();//time of allocation
-    
+
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList();
     //list for storing all the guilds on the page
@@ -33,13 +35,13 @@ public class RaidPhpParser {
     //list of lockouts
     List<Lockout> lockouts = new ArrayList();
     //place to store the above lists
-    RaidPhpPage rpp = new RaidPhpPage(raidTargets,guilds,lockouts, retrieved);
+    RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds, lockouts, retrieved);
 
     public void crawl() throws IOException {
         crawl(URL);
     }
 
-    public void crawl(String url) throws IOException {
+    public RaidPhpPage crawl(String url) throws IOException {
         if ((url == null) || (url == "")) {
             url = URL;
         }
@@ -73,7 +75,11 @@ public class RaidPhpParser {
         raidTargets.addAll(mapSpawnTable(height, classicTable));
 
         System.out.println(rpp);
+        return rpp;
+    }
 
+    public RaidPhpPage getRpp() {
+        return rpp;
     }
 
     private Element selectTable(Document doc, String searchTerm) {
@@ -131,7 +137,7 @@ public class RaidPhpParser {
             //for (Lockout l : targetLockouts) {System.out.println(l.toString());}
             rt.setLockouts(targetLockouts);
             raidTargets.add(rt);
-            
+
         }//kunark table loop
 
         return raidTargets;
@@ -153,8 +159,48 @@ public class RaidPhpParser {
         return string;
     }
 
+    private void persist(RaidPhpPage page) throws IOException {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            // do some work
+            ...
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+    }
+
+    private RaidPhpPage retrieve() {
+
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            // do some work
+            ...
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        RaidPhpPage page = new RaidPhpPage(raidTargets, guilds, lockouts, retrieved);
+        return page;
+    }
+
     public static void main(String[] args) throws IOException {
-        RaidPhpParser rpp = new RaidPhpParser();
-        rpp.crawl();
+        RaidPhpParser parser = new RaidPhpParser();
+        parser.crawl();
     }
 }

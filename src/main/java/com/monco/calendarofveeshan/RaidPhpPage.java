@@ -63,7 +63,7 @@ public class RaidPhpPage {
     
     @Override
     public String toString() {
-        String string = "\nRaidPhpPage " + timeRetrieved.getTime()
+        String string = "\nRaidPhpPage " + page_id+ ", " + timeRetrieved.getTime()
                 + "\n\nTargets\n" + raidTargets
                 + "\n\nGuilds\n" + guilds;
         return string;

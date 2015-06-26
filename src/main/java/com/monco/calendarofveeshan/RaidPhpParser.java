@@ -6,6 +6,7 @@
 package com.monco.calendarofveeshan;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ import org.jsoup.nodes.Element;
  */
 public class RaidPhpParser {
 
+    final String path = "raidPHPPage.json";
     final String URL = "https://www.project1999.com/raid.php";
     Date retrieved = new Date();//time of allocation
     //list for storing all the RaidTargets on the page
@@ -157,33 +159,51 @@ public class RaidPhpParser {
         return string;
     }
 
-    private void persist(RaidPhpPage page) throws IOException {
+    private void persist(List<RaidPhpPage> pages) throws IOException {
         Gson gson = new Gson();
-        String json = gson.toJson(page);
-        FileWriter fw = new FileWriter("raidPHPPage");
+        String json = gson.toJson(pages);
+        FileWriter fw = new FileWriter(path);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(json);
         bw.close();
     }
 
-    private RaidPhpPage retrieve() throws FileNotFoundException, IOException {
-
-        FileReader fr = new FileReader("raidPHPPage");
+    private List<RaidPhpPage> retrieve() throws FileNotFoundException, IOException {
+        FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr);
         Gson gson = new Gson();
-        RaidPhpPage page = gson.fromJson(br, RaidPhpPage.class);
+        List<RaidPhpPage> pages = gson.fromJson(br, new TypeToken<List<RaidPhpPage>>() {
+        }.getType());
         br.close();
-        return page;
+        return pages;
     }
 
     public static void main(String[] args) throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
-        RaidPhpPage rpp = parser.crawl();
-        rpp.setPage_id(9);
+        //RaidPhpPage rpp = parser.crawl();
+        RaidPhpPage rpp = new RaidPhpPage(null, null, null);
+        RaidPhpPage rpp2 = new RaidPhpPage(null, null, null);
+        RaidPhpPage rpp3 = new RaidPhpPage(null, null, null);
+        List<RaidPhpPage> pages = new ArrayList();
+
+        rpp.setPage_id(1);
         rpp.setTimeRetrieved(new Date());
-                
-        parser.persist(rpp);
-        rpp =  parser.retrieve();
-        System.out.println("ID="+rpp.getPage_id());
+        pages.add(rpp);
+
+        rpp2.setPage_id(2);
+        rpp2.setTimeRetrieved(new Date());
+        pages.add(rpp2);
+
+        rpp3.setPage_id(4);
+        rpp3.setTimeRetrieved(new Date());
+        pages.add(rpp3);
+
+        parser.persist(pages);
+
+        pages = parser.retrieve();
+        for (RaidPhpPage page : pages) {
+            System.out.println("ID=" + page.getPage_id());
+        }
+        System.out.println("Done.");
     }
 }

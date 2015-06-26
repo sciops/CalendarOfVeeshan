@@ -10,7 +10,6 @@ package com.monco.calendarofveeshan;
  * @author stephen.williams@monco.info
  */
 public class Lockout {
-    private RaidTarget raidtarget;
     private Guild guild;
     private int remainingLockouts;
 
@@ -18,17 +17,10 @@ public class Lockout {
         this.guild = guild;
         this.remainingLockouts = remainingLockouts;
     }
-
-    public Lockout(RaidTarget raidtarget, Guild guild, int remainingLockouts) {
-        this.raidtarget = raidtarget;
-        this.guild = guild;
-        this.remainingLockouts = remainingLockouts;
-    }
-
     
     @Override
     public String toString() {
-        return "\n" + raidtarget.getName()+", "+ raidtarget.getNxSpawnClass() + ", " + guild.getName() + ", " + remainingLockouts;
+        return "\n"+ guild.getName() + ", " + remainingLockouts;
     }
     
     

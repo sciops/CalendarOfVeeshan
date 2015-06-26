@@ -21,13 +21,11 @@ public class RaidPhpPage {
     int page_id;
     List<RaidTarget> raidTargets;
     List<Guild> guilds;
-    List<Lockout> lockouts;
     Date timeRetrieved;
 
-    public RaidPhpPage(List<RaidTarget> raidTargets, List<Guild> guilds, List<Lockout> lockouts, Date timeRetrieved) {
+    public RaidPhpPage(List<RaidTarget> raidTargets, List<Guild> guilds, Date timeRetrieved) {
         this.raidTargets = raidTargets;
         this.guilds = guilds;
-        this.lockouts = lockouts;
         this.timeRetrieved = timeRetrieved;
     }
 
@@ -55,14 +53,6 @@ public class RaidPhpPage {
         this.guilds = guilds;
     }
 
-    public List<Lockout> getLockouts() {
-        return lockouts;
-    }
-
-    public void setLockouts(List<Lockout> lockouts) {
-        this.lockouts = lockouts;
-    }
-
     public Date getTimeRetrieved() {
         return timeRetrieved;
     }
@@ -75,8 +65,7 @@ public class RaidPhpPage {
     public String toString() {
         String string = "\nRaidPhpPage " + timeRetrieved.getTime()
                 + "\n\nTargets\n" + raidTargets
-                + "\n\nGuilds\n" + guilds
-                + "\n\nLockouts\n" + lockouts;
+                + "\n\nGuilds\n" + guilds;
         return string;
     }
 
@@ -93,9 +82,6 @@ public class RaidPhpPage {
             return false;
         }
         if (!Objects.equals(this.guilds, other.guilds)) {
-            return false;
-        }
-        if (!Objects.equals(this.lockouts, other.lockouts)) {
             return false;
         }
         return true;

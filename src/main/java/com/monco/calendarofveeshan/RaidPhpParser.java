@@ -28,18 +28,13 @@ import org.jsoup.nodes.Element;
 public class RaidPhpParser {
 
     final String URL = "https://www.project1999.com/raid.php";
-
     Date retrieved = new Date();//time of allocation
-
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList();
     //list for storing all the guilds on the page
-    List<Guild> guilds = new ArrayList() {
-    };
-    //list of lockouts
-    List<Lockout> lockouts = new ArrayList();
+    List<Guild> guilds = new ArrayList();
     //place to store the above lists
-    RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds, lockouts, retrieved);
+    RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds, retrieved);
 
     public RaidPhpPage crawl() throws IOException {
         return crawl(URL);
@@ -78,7 +73,7 @@ public class RaidPhpParser {
         height = 3;
         raidTargets.addAll(mapSpawnTable(height, classicTable));
 
-        System.out.println(rpp);
+        //System.out.println(rpp);
         return rpp;
     }
 
@@ -133,8 +128,7 @@ public class RaidPhpParser {
                     }
                 }
                 //create and add a lockout to the list
-                Lockout lockout = new Lockout(rt, guild, LO);
-                lockouts.add(lockout);
+                Lockout lockout = new Lockout(guild, LO);
                 targetLockouts.add(lockout);
             }
             //debug LO list
@@ -165,12 +159,7 @@ public class RaidPhpParser {
 
     private void persist(RaidPhpPage page) throws IOException {
         Gson gson = new Gson();
-
-        // convert java object to JSON format,
-        // and returned as JSON formatted string
-        System.out.println("Starting persist()");
         String json = gson.toJson(page);
-
         FileWriter fw = new FileWriter("raidPHPPage");
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(json);
@@ -190,10 +179,11 @@ public class RaidPhpParser {
     public static void main(String[] args) throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
         RaidPhpPage rpp = parser.crawl();
-        rpp.setPage_id(7);
+        rpp.setPage_id(9);
         rpp.setTimeRetrieved(new Date());
                 
         parser.persist(rpp);
-         System.out.println ( parser.retrieve() );
+        rpp =  parser.retrieve();
+        System.out.println("ID="+rpp.getPage_id());
     }
 }

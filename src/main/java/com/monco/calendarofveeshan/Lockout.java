@@ -25,6 +25,7 @@ public class Lockout {
         this.remainingLockouts = remainingLockouts;
     }
 
+    
     @Override
     public String toString() {
         return "\n" + raidtarget.getName()+", "+ raidtarget.getNxSpawnClass() + ", " + guild.getName() + ", " + remainingLockouts;

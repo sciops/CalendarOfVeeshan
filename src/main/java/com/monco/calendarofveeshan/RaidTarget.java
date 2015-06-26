@@ -103,6 +103,7 @@ public class RaidTarget {
         return lockouts;
     }
 
+    
     @Override
     public String toString() {
         return "\n"+name+", "+nxSpawnClass;

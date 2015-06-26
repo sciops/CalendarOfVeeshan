@@ -39,8 +39,6 @@ public class RaidPhpPage {
         this.page_id = page_id;
     }
     
-    
-
     public List<RaidTarget> getRaidTargets() {
         return raidTargets;
     }
@@ -72,7 +70,7 @@ public class RaidPhpPage {
     public void setTimeRetrieved(Date timeRetrieved) {
         this.timeRetrieved = timeRetrieved;
     }
-
+    
     @Override
     public String toString() {
         String string = "\nRaidPhpPage " + timeRetrieved.getTime()

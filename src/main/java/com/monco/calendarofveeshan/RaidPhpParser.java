@@ -5,7 +5,11 @@
  */
 package com.monco.calendarofveeshan;
 
+import com.google.gson.Gson;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +17,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -160,22 +163,27 @@ public class RaidPhpParser {
         return string;
     }
 
-    private  void persist(RaidPhpPage page) throws IOException {
-        System.out.println("Maven + Hibernate + MySQL");
-        Session session = HibernateUtil.getSessionFactory().openSession();
- 
-        session.beginTransaction();
+    private void persist(RaidPhpPage page) throws IOException {
+        Gson gson = new Gson();
 
- 
-        session.save(page);
-        session.getTransaction().commit();
+        // convert java object to JSON format,
+        // and returned as JSON formatted string
+        System.out.println("Starting persist()");
+        String json = gson.toJson(page);
 
+        FileWriter fw = new FileWriter("raidPHPPage");
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(json);
+        bw.close();
     }
 
-    private  RaidPhpPage retrieve(
-    ) {
+    private RaidPhpPage retrieve() throws FileNotFoundException, IOException {
 
-        RaidPhpPage page = new RaidPhpPage(raidTargets, guilds, lockouts, retrieved);
+        FileReader fr = new FileReader("raidPHPPage");
+        BufferedReader br = new BufferedReader(fr);
+        Gson gson = new Gson();
+        RaidPhpPage page = gson.fromJson(br, RaidPhpPage.class);
+        br.close();
         return page;
     }
 
@@ -184,6 +192,8 @@ public class RaidPhpParser {
         RaidPhpPage rpp = parser.crawl();
         rpp.setPage_id(7);
         rpp.setTimeRetrieved(new Date());
+                
         parser.persist(rpp);
+         System.out.println ( parser.retrieve() );
     }
 }

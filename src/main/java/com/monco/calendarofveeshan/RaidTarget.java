@@ -7,6 +7,7 @@ package com.monco.calendarofveeshan;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import org.apache.commons.lang3.time.DateUtils;
 
 /**
@@ -108,5 +109,37 @@ public class RaidTarget {
     public String toString() {
         return "\n"+name+", "+nxSpawnClass;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.name);
+        hash = 71 * hash + Objects.hashCode(this.nxSpawnClass);
+        hash = 71 * hash + Objects.hashCode(this.lockouts);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RaidTarget other = (RaidTarget) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.nxSpawnClass, other.nxSpawnClass)) {
+            return false;
+        }
+        if (!Objects.equals(this.lockouts, other.lockouts)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
 }

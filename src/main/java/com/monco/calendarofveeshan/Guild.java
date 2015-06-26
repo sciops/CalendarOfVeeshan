@@ -6,6 +6,7 @@
 package com.monco.calendarofveeshan;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -39,6 +40,31 @@ public class Guild {
     public String toString() {
         return "\n" + name + ", "+ raidClass ;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Guild other = (Guild) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.raidClass, other.raidClass)) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
 }

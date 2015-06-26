@@ -180,30 +180,40 @@ public class RaidPhpParser {
 
     public static void main(String[] args) throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
-        //RaidPhpPage rpp = parser.crawl();
-        RaidPhpPage rpp = new RaidPhpPage(null, null, null);
+
+        RaidPhpPage rpp1 = new RaidPhpPage(null, null, null);
         RaidPhpPage rpp2 = new RaidPhpPage(null, null, null);
-        RaidPhpPage rpp3 = new RaidPhpPage(null, null, null);
+        RaidPhpPage rpp3 = parser.crawl();
         List<RaidPhpPage> pages = new ArrayList();
 
-        rpp.setPage_id(1);
-        rpp.setTimeRetrieved(new Date());
-        pages.add(rpp);
-
+        rpp1.setPage_id(1);
+        rpp1.setTimeRetrieved(new Date());
+        pages.add(rpp1);
         rpp2.setPage_id(2);
         rpp2.setTimeRetrieved(new Date());
         pages.add(rpp2);
-
         rpp3.setPage_id(4);
         rpp3.setTimeRetrieved(new Date());
         pages.add(rpp3);
-
         parser.persist(pages);
+        
+        RaidPhpPage rpp = new RaidPhpPage(null, null, null);
+        RaidPhpParser parser2 = new RaidPhpParser();
+        rpp = parser2.crawl();
+        rpp.setPage_id(69);
+        rpp.setTimeRetrieved(new Date());
 
         pages = parser.retrieve();
+        int last = pages.size() - 1;
+        System.out.println("\npersisted pages\n---------------\n");
         for (RaidPhpPage page : pages) {
             System.out.println("ID=" + page.getPage_id());
         }
+
+        RaidPhpPage lastPage = pages.get(last);
+        System.out.println("\nCompare current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
+        boolean same = rpp.equals(lastPage);
+        System.out.println("Same = " + same);
         System.out.println("Done.");
     }
 }

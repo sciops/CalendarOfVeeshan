@@ -5,6 +5,8 @@
  */
 package com.monco.calendarofveeshan;
 
+import java.util.Objects;
+
 /**
  *
  * @author stephen.williams@monco.info
@@ -22,6 +24,31 @@ public class Lockout {
     public String toString() {
         return "\n"+ guild.getName() + ", " + remainingLockouts;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Lockout other = (Lockout) obj;
+        if (!Objects.equals(this.guild, other.guild)) {
+            return false;
+        }
+        if (this.remainingLockouts != other.remainingLockouts) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
     

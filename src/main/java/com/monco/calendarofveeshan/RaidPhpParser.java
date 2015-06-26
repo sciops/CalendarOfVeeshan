@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Session;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,8 +38,8 @@ public class RaidPhpParser {
     //place to store the above lists
     RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds, lockouts, retrieved);
 
-    public void crawl() throws IOException {
-        crawl(URL);
+    public RaidPhpPage crawl() throws IOException {
+        return crawl(URL);
     }
 
     public RaidPhpPage crawl(String url) throws IOException {
@@ -159,48 +160,30 @@ public class RaidPhpParser {
         return string;
     }
 
-    private void persist(RaidPhpPage page) throws IOException {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            // do some work
-            ...
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+    private  void persist(RaidPhpPage page) throws IOException {
+        System.out.println("Maven + Hibernate + MySQL");
+        Session session = HibernateUtil.getSessionFactory().openSession();
+ 
+        session.beginTransaction();
+
+ 
+        session.save(page);
+        session.getTransaction().commit();
 
     }
 
-    private RaidPhpPage retrieve() {
+    private  RaidPhpPage retrieve(
+    ) {
 
-        Session session = factory.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            // do some work
-            ...
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
         RaidPhpPage page = new RaidPhpPage(raidTargets, guilds, lockouts, retrieved);
         return page;
     }
 
     public static void main(String[] args) throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
-        parser.crawl();
+        RaidPhpPage rpp = parser.crawl();
+        rpp.setPage_id(7);
+        rpp.setTimeRetrieved(new Date());
+        parser.persist(rpp);
     }
 }

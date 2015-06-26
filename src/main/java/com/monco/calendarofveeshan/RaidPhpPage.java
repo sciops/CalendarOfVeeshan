@@ -18,6 +18,7 @@ import java.util.Objects;
  */
 public class RaidPhpPage {
 
+    int page_id;
     List<RaidTarget> raidTargets;
     List<Guild> guilds;
     List<Lockout> lockouts;
@@ -29,6 +30,16 @@ public class RaidPhpPage {
         this.lockouts = lockouts;
         this.timeRetrieved = timeRetrieved;
     }
+
+    public int getPage_id() {
+        return page_id;
+    }
+
+    public void setPage_id(int page_id) {
+        this.page_id = page_id;
+    }
+    
+    
 
     public List<RaidTarget> getRaidTargets() {
         return raidTargets;

@@ -18,14 +18,21 @@ public class Kill {
     private String mobName;
     private Date killTime;
     private String killClass;
-    private String killGuild;
-    
+    private Guild killGuild;
+
     //this constructor uses information from the old oldTarget object
     //killTime comes from the new page's retrieval time.
-    Kill(RaidTarget oldTarget, Date killTime){
+    Kill(RaidTarget oldTarget, Date killTime) {
         this.mobName = oldTarget.getName();
         this.killTime = killTime;
         this.killClass = oldTarget.getrClass();//the class of the kill is what the old oldTarget said the class would be.
+    }
+
+    Kill(RaidTarget oldTarget, Date killTime, Guild guild) {
+        this.killGuild = guild;
+        this.mobName = oldTarget.getName();
+        this.killTime = killTime;
+        this.killClass = oldTarget.getrClass();
     }
 
     public String getMobName() {
@@ -40,8 +47,10 @@ public class Kill {
         return killClass;
     }
 
-    public String getKillGuild() {
+    public Guild getKillGuild() {
         return killGuild;
-    } 
-    
+    }
+
+
+
 }

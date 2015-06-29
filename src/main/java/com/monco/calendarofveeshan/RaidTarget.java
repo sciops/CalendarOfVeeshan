@@ -134,9 +134,7 @@ public class RaidTarget {
         if (!Objects.equals(this.nxSpawnClass, other.nxSpawnClass)) {
             return false;
         }
-        if (!Objects.equals(this.lockouts, other.lockouts)) {
-            return false;
-        }
+
         return true;
     }
     

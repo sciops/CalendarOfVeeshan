@@ -5,6 +5,7 @@
  */
 package com.monco.calendarofveeshan;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -59,6 +60,23 @@ public class RaidPhpPage {
 
     public void setTimeRetrieved(Date timeRetrieved) {
         this.timeRetrieved = timeRetrieved;
+    }
+    
+    //return changed raidtargets from this instance
+    public List<RaidTarget> getChangedTargets(RaidPhpPage oldPage) {
+        List<RaidTarget> changedTargets = new ArrayList();
+        List<RaidTarget> oldRaidTargets = oldPage.getRaidTargets();
+        for (int i = 0; i<this.raidTargets.size();i++) {
+            RaidTarget rtNew = this.raidTargets.get(i);
+            RaidTarget rtOld = oldRaidTargets.get(i);
+            //System.out.println("\nComparing "+rtNew+" against "+rtOld);
+            if (!this.raidTargets.get(i).equals(oldRaidTargets.get(i))) {
+                changedTargets.add(this.raidTargets.get(i));
+                //System.out.print("CHANGE DETECTED!");
+            }
+            //else System.out.print("NO CHANGE!");
+        }       
+        return changedTargets;
     }
     
     @Override

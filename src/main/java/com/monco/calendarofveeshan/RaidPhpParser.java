@@ -29,7 +29,8 @@ import org.jsoup.nodes.Element;
 public class RaidPhpParser {
 
     final String path = "raidPHPPage.json";
-    final String URL = "https://www.project1999.com/raid.php";
+    //final String URL = "https://www.project1999.com/raid.php";
+    final String URL = "http://127.0.0.1/Project%201999%20-%20Raid%20Policy.html";
     Date retrieved = new Date();//time of allocation
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList();
@@ -75,7 +76,7 @@ public class RaidPhpParser {
         height = 3;
         raidTargets.addAll(mapSpawnTable(height, classicTable));
 
-        //System.out.println(rpp);
+        rpp.setTimeRetrieved(new Date());
         return rpp;
     }
 
@@ -178,30 +179,35 @@ public class RaidPhpParser {
         return pages;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void persistTest() throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
 
-        RaidPhpPage rpp1 = new RaidPhpPage(null, null, null);
-        RaidPhpPage rpp2 = new RaidPhpPage(null, null, null);
+        //RaidPhpPage rpp1 = new RaidPhpPage(null, null, null);
+        //RaidPhpPage rpp2 = new RaidPhpPage(null, null, null);
         RaidPhpPage rpp3 = parser.crawl();
         List<RaidPhpPage> pages = new ArrayList();
-
-        rpp1.setPage_id(1);
-        rpp1.setTimeRetrieved(new Date());
-        pages.add(rpp1);
-        rpp2.setPage_id(2);
-        rpp2.setTimeRetrieved(new Date());
-        pages.add(rpp2);
-        rpp3.setPage_id(4);
+        /*
+         rpp1.setPage_id(1);
+         rpp1.setTimeRetrieved(new Date());
+         pages.add(rpp1);
+         rpp2.setPage_id(2);
+         rpp2.setTimeRetrieved(new Date());
+         pages.add(rpp2);
+         */
+        rpp3.setPage_id(16);
         rpp3.setTimeRetrieved(new Date());
         pages.add(rpp3);
         parser.persist(pages);
-        
+
+    }
+
+    public static void comparisonTest() throws IOException {
+        RaidPhpParser parser = new RaidPhpParser();
+        List<RaidPhpPage> pages = new ArrayList();
+
         RaidPhpPage rpp = new RaidPhpPage(null, null, null);
-        RaidPhpParser parser2 = new RaidPhpParser();
-        rpp = parser2.crawl();
-        rpp.setPage_id(69);
-        rpp.setTimeRetrieved(new Date());
+        rpp = parser.crawl();
+        rpp.setPage_id(6969);
 
         pages = parser.retrieve();
         int last = pages.size() - 1;
@@ -213,7 +219,14 @@ public class RaidPhpParser {
         RaidPhpPage lastPage = pages.get(last);
         System.out.println("\nCompare current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
         boolean same = rpp.equals(lastPage);
-        System.out.println("Same = " + same);
+        System.out.println("\nSame = " + same);
+
+        System.out.println("\nChanged targets \n" + rpp.getChangedTargets(lastPage));
+
         System.out.println("Done.");
+    }
+
+    public static void main(String[] args) throws IOException {
+        comparisonTest();
     }
 }

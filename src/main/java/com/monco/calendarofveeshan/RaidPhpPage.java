@@ -24,20 +24,18 @@ public class RaidPhpPage {
     List<Guild> guilds;
     Date timeRetrieved;
 
-    public RaidPhpPage(List<RaidTarget> raidTargets, List<Guild> guilds, Date timeRetrieved) {
+    public RaidPhpPage(List<RaidTarget> raidTargets, List<Guild> guilds) {
         this.raidTargets = raidTargets;
         this.guilds = guilds;
-        this.timeRetrieved = timeRetrieved;
+        this.timeRetrieved = new Date();
+        long secs = this.timeRetrieved.getTime() / 1000;
+        this.page_id = (int) secs;
     }
 
     public int getPage_id() {
         return page_id;
     }
 
-    public void setPage_id(int page_id) {
-        this.page_id = page_id;
-    }
-    
     public List<RaidTarget> getRaidTargets() {
         return raidTargets;
     }
@@ -58,15 +56,11 @@ public class RaidPhpPage {
         return timeRetrieved;
     }
 
-    public void setTimeRetrieved(Date timeRetrieved) {
-        this.timeRetrieved = timeRetrieved;
-    }
-    
     //return changed raidtargets from this instance
     public List<RaidTarget> getChangedTargets(RaidPhpPage oldPage) {
         List<RaidTarget> changedTargets = new ArrayList();
         List<RaidTarget> oldRaidTargets = oldPage.getRaidTargets();
-        for (int i = 0; i<this.raidTargets.size();i++) {
+        for (int i = 0; i < this.raidTargets.size(); i++) {
             RaidTarget rtNew = this.raidTargets.get(i);
             RaidTarget rtOld = oldRaidTargets.get(i);
             //System.out.println("\nComparing "+rtNew+" against "+rtOld);
@@ -75,13 +69,13 @@ public class RaidPhpPage {
                 //System.out.print("CHANGE DETECTED!");
             }
             //else System.out.print("NO CHANGE!");
-        }       
+        }
         return changedTargets;
     }
-    
+
     @Override
     public String toString() {
-        String string = "\nRaidPhpPage " + page_id+ ", " + timeRetrieved.getTime()
+        String string = "\nRaidPhpPage " + page_id + ", " + timeRetrieved.getTime()
                 + "\n\nTargets\n" + raidTargets
                 + "\n\nGuilds\n" + guilds;
         return string;
@@ -104,7 +98,5 @@ public class RaidPhpPage {
         }
         return true;
     }
-    
-    
 
 }

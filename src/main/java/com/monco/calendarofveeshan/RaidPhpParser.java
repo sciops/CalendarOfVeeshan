@@ -31,13 +31,12 @@ public class RaidPhpParser {
     final String path = "raidPHPPage.json";
     //final String URL = "https://www.project1999.com/raid.php";
     final String URL = "http://127.0.0.1/Project%201999%20-%20Raid%20Policy.html";
-    Date retrieved = new Date();//time of allocation
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList();
     //list for storing all the guilds on the page
     List<Guild> guilds = new ArrayList();
     //place to store the above lists
-    RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds, retrieved);
+    RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds);
 
     public RaidPhpPage crawl() throws IOException {
         return crawl(URL);
@@ -76,7 +75,6 @@ public class RaidPhpParser {
         height = 3;
         raidTargets.addAll(mapSpawnTable(height, classicTable));
 
-        rpp.setTimeRetrieved(new Date());
         return rpp;
     }
 
@@ -160,63 +158,40 @@ public class RaidPhpParser {
         return string;
     }
 
-    private void persist(List<RaidPhpPage> pages) throws IOException {
+    private void persist(RaidPhpPage page) throws IOException {
         Gson gson = new Gson();
-        String json = gson.toJson(pages);
+        String json = gson.toJson(page);
         FileWriter fw = new FileWriter(path);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(json);
         bw.close();
+        fw.close();
     }
 
-    private List<RaidPhpPage> retrieve() throws FileNotFoundException, IOException {
+    private RaidPhpPage retrieve() throws FileNotFoundException, IOException {
         FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr);
         Gson gson = new Gson();
-        List<RaidPhpPage> pages = gson.fromJson(br, new TypeToken<List<RaidPhpPage>>() {
-        }.getType());
+        RaidPhpPage page = gson.fromJson(br, new TypeToken<RaidPhpPage>() {}.getType());
         br.close();
-        return pages;
+        fr.close();
+        return page;
     }
 
     public static void persistTest() throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
-
-        //RaidPhpPage rpp1 = new RaidPhpPage(null, null, null);
-        //RaidPhpPage rpp2 = new RaidPhpPage(null, null, null);
         RaidPhpPage rpp3 = parser.crawl();
-        List<RaidPhpPage> pages = new ArrayList();
-        /*
-         rpp1.setPage_id(1);
-         rpp1.setTimeRetrieved(new Date());
-         pages.add(rpp1);
-         rpp2.setPage_id(2);
-         rpp2.setTimeRetrieved(new Date());
-         pages.add(rpp2);
-         */
-        rpp3.setPage_id(16);
-        rpp3.setTimeRetrieved(new Date());
-        pages.add(rpp3);
-        parser.persist(pages);
+        parser.persist(rpp3);
 
     }
 
     public static void comparisonTest() throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
-        List<RaidPhpPage> pages = new ArrayList();
 
-        RaidPhpPage rpp = new RaidPhpPage(null, null, null);
+        RaidPhpPage rpp = new RaidPhpPage(null, null);
         rpp = parser.crawl();
-        rpp.setPage_id(6969);
 
-        pages = parser.retrieve();
-        int last = pages.size() - 1;
-        System.out.println("\npersisted pages\n---------------\n");
-        for (RaidPhpPage page : pages) {
-            System.out.println("ID=" + page.getPage_id());
-        }
-
-        RaidPhpPage lastPage = pages.get(last);
+        RaidPhpPage lastPage = parser.retrieve();
         System.out.println("\nCompare current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
         boolean same = rpp.equals(lastPage);
         System.out.println("\nSame = " + same);

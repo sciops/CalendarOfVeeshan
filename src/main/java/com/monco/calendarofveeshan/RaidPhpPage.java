@@ -56,7 +56,7 @@ public class RaidPhpPage {
         return timeRetrieved;
     }
 
-    //return changed raidtargets from this instance
+    //return changed raidtargets from the other (old) instance
     public List<RaidTarget> getChangedTargets(RaidPhpPage oldPage) {
         List<RaidTarget> changedTargets = new ArrayList();
         List<RaidTarget> oldRaidTargets = oldPage.getRaidTargets();
@@ -64,8 +64,8 @@ public class RaidPhpPage {
             RaidTarget rtNew = this.raidTargets.get(i);
             RaidTarget rtOld = oldRaidTargets.get(i);
             //System.out.println("\nComparing "+rtNew+" against "+rtOld);
-            if (!this.raidTargets.get(i).equals(oldRaidTargets.get(i))) {
-                changedTargets.add(this.raidTargets.get(i));
+            if ( !rtNew.equals(rtOld) ) {
+                changedTargets.add(rtOld);
                 //System.out.print("CHANGE DETECTED!");
             }
             //else System.out.print("NO CHANGE!");

@@ -15,12 +15,22 @@ import java.util.Date;
  */
 public class Kill {
 
+    private String mobName;
     private Date killTime;
     private String killClass;
     private String killGuild;
-    private Date nxAvgSpawnTime;
-    private String nxClass;
     
+    //this constructor uses information from the old oldTarget object
+    //killTime comes from the new page's retrieval time.
+    Kill(RaidTarget oldTarget, Date killTime){
+        this.mobName = oldTarget.getName();
+        this.killTime = killTime;
+        this.killClass = oldTarget.getrClass();//the class of the kill is what the old oldTarget said the class would be.
+    }
+
+    public String getMobName() {
+        return mobName;
+    }
 
     public Date getKillTime() {
         return killTime;
@@ -32,15 +42,6 @@ public class Kill {
 
     public String getKillGuild() {
         return killGuild;
-    }
-
-    public Date getNxAvgSpawnTime() {
-        return nxAvgSpawnTime;
-    }
-
-    public String getNxClass() {
-        return nxClass;
-    }
-    
+    } 
     
 }

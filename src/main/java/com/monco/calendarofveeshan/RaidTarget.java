@@ -18,11 +18,11 @@ import org.apache.commons.lang3.time.DateUtils;
  */
 public class RaidTarget {
 
-    private String name;//represents the raid target's name cell
-    private String nxSpawnClass;//represents the next spawn class cell
+    private String mobName;//represents the raid target's mobName cell
+    private String rClass;//represents the next spawn class cell
     private List<Lockout> lockouts; //represents the lockouts cell
 
-    private Date killTime;
+    private Date lastKillTime;//TODO:replace with Kill lastKill?
     private Date nxAvgSpawnTime;
     private Date windowOpen;
     private Date windowClose;
@@ -33,26 +33,26 @@ public class RaidTarget {
     private final int STD_RESPAWN_WINDOW = 8;
 
     public RaidTarget(String name, String nxSpawnClass) {
-        this.name = name;
-        this.nxSpawnClass = nxSpawnClass;
+        this.mobName = name;
+        this.rClass = nxSpawnClass;
     }
 
     public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts) {
-        this.name = name;
-        this.nxSpawnClass = nxSpawnClass;
+        this.mobName = name;
+        this.rClass = nxSpawnClass;
         this.lockouts = lockouts;
     }
 
     public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts, Date killTime) {
-        this.name = name;
-        this.nxSpawnClass = nxSpawnClass;
+        this.mobName = name;
+        this.rClass = nxSpawnClass;
         this.lockouts = lockouts;
         setTimes(killTime);
     }
 
     public RaidTarget(String name, String nxSpawnClass, List<Lockout> lockouts, Date killTime, int respawnHours, int respawnWindow) {
-        this.name = name;
-        this.nxSpawnClass = nxSpawnClass;
+        this.mobName = name;
+        this.rClass = nxSpawnClass;
         this.lockouts = lockouts;
         setTimes(killTime, respawnHours, respawnWindow);
     }
@@ -66,7 +66,7 @@ public class RaidTarget {
     }
 
     public void setTimes(Date killTime, int respawnHours, int respawnWindow) {
-        this.killTime = killTime;
+        this.lastKillTime = killTime;
         nxAvgSpawnTime = DateUtils.addHours(killTime, respawnHours);
         windowClose = DateUtils.addHours(killTime, (respawnWindow / 2));
         windowOpen = DateUtils.addHours(killTime, (-1) * (respawnWindow / 2));
@@ -77,15 +77,15 @@ public class RaidTarget {
     }
 
     public String getName() {
-        return name;
+        return mobName;
     }
 
-    public String getNxSpawnClass() {
-        return nxSpawnClass;
+    public String getrClass() {
+        return rClass;
     }
 
     public Date getKillTime() {
-        return killTime;
+        return lastKillTime;
     }
 
     public Date getNxAvgSpawnTime() {
@@ -104,17 +104,16 @@ public class RaidTarget {
         return lockouts;
     }
 
-    
     @Override
     public String toString() {
-        return "\n"+name+", "+nxSpawnClass;
+        return "\n" + mobName + ", " + rClass;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.name);
-        hash = 71 * hash + Objects.hashCode(this.nxSpawnClass);
+        hash = 71 * hash + Objects.hashCode(this.mobName);
+        hash = 71 * hash + Objects.hashCode(this.rClass);
         hash = 71 * hash + Objects.hashCode(this.lockouts);
         return hash;
     }
@@ -128,16 +127,14 @@ public class RaidTarget {
             return false;
         }
         final RaidTarget other = (RaidTarget) obj;
-        if (!Objects.equals(this.name, other.name)) {
+        if (!Objects.equals(this.mobName, other.mobName)) {
             return false;
         }
-        if (!Objects.equals(this.nxSpawnClass, other.nxSpawnClass)) {
+        if (!Objects.equals(this.rClass, other.rClass)) {
             return false;
         }
 
         return true;
     }
-    
-    
 
 }

@@ -172,7 +172,8 @@ public class RaidPhpParser {
         FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr);
         Gson gson = new Gson();
-        RaidPhpPage page = gson.fromJson(br, new TypeToken<RaidPhpPage>() {}.getType());
+        RaidPhpPage page = gson.fromJson(br, new TypeToken<RaidPhpPage>() {
+        }.getType());
         br.close();
         fr.close();
         return page;
@@ -192,12 +193,19 @@ public class RaidPhpParser {
         rpp = parser.crawl();
 
         RaidPhpPage lastPage = parser.retrieve();
-        System.out.println("\nCompare current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
-        boolean same = rpp.equals(lastPage);
-        System.out.println("\nSame = " + same);
-
-        System.out.println("\nChanged targets \n" + rpp.getChangedTargets(lastPage));
-
+        System.out.println("\nComparing current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
+        if (!rpp.equals(lastPage)) {
+            //get a list of the old targets to make a kill list
+            List<RaidTarget> changedTargets = rpp.getChangedTargets(lastPage);
+            List<Kill> kills = new ArrayList();
+            for (RaidTarget cRT : changedTargets) {
+                Kill k = new Kill(cRT, rpp.getTimeRetrieved());
+                kills.add(k);
+            }
+            System.out.println(kills);
+        }
+        
+        
         System.out.println("Done.");
     }
 

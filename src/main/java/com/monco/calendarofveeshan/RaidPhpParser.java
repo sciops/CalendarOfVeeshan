@@ -195,8 +195,10 @@ public class RaidPhpParser {
         RaidPhpPage lastPage = parser.retrieve();
         System.out.println("\nComparing current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
         if (!rpp.equals(lastPage)) {
+            System.out.println("There has been a change.");
             //get a list of the old targets to make a kill list
             List<RaidTarget> changedTargets = rpp.getChangedTargets(lastPage);
+            System.out.println("The list of changed targets\n"+changedTargets);
             List<Kill> kills = new ArrayList();
             for (RaidTarget cRT : changedTargets) {
                 Kill k = new Kill(cRT, rpp.getTimeRetrieved());

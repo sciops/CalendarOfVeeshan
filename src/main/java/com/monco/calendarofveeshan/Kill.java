@@ -51,6 +51,13 @@ public class Kill {
         return killGuild;
     }
 
+    @Override
+    public String toString() {
+        return "\nKill{" + "mobName=" + mobName + ", killTime=" + killTime + ", killClass=" + killClass + ", killGuild=" + killGuild + '}';
+    }
+    
+    
+
 
 
 }

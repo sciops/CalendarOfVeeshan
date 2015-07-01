@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.ParseConversionEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,7 +29,8 @@ import org.jsoup.nodes.Element;
  */
 public class RaidPhpParser {
 
-    final String path = "raidPHPPage.json";
+    final String pagePath = "raidPHPPage.json";
+    final String killPath = "kill.json";
     //final String URL = "https://www.project1999.com/raid.php";
     final String URL = "http://127.0.0.1/Project%201999%20-%20Raid%20Policy.html";
     //list for storing all the RaidTargets on the page
@@ -137,11 +139,12 @@ public class RaidPhpParser {
             rt.setLockouts(targetLockouts);
             raidTargets.add(rt);
 
-        }//kunark table loop
+        }//end kunark table loop
 
         return raidTargets;
     }
 
+    //parse a list of guilds from the guild tables in the page
     private List<Guild> mapGuildTable(int height, Element table, String raidClass) {
         List<Guild> guilds = new ArrayList();
         for (int row = 1; row < height; row++) {
@@ -152,24 +155,50 @@ public class RaidPhpParser {
         return guilds;
     }
 
+    //removes space from string, including this weird unicode whitespace
     private String remSpace(String string) {
         string = StringUtils.deleteWhitespace(string);//https://stackoverflow.com/questions/5455794/removing-whitespace-from-strings-in-java
         string = string.replace("\u00a0", "");//https://stackoverflow.com/questions/8501072/string-unicode-remove-char-from-the-string
         return string;
     }
 
-    private void persist(RaidPhpPage page) throws IOException {
+    //persist kills, just JSONs written to file for now.
+    private void persistKills(List<Kill> kills) throws IOException {
         Gson gson = new Gson();
-        String json = gson.toJson(page);
-        FileWriter fw = new FileWriter(path);
+        String json = gson.toJson(kills);
+        FileWriter fw = new FileWriter(killPath);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(json);
         bw.close();
         fw.close();
     }
 
-    private RaidPhpPage retrieve() throws FileNotFoundException, IOException {
-        FileReader fr = new FileReader(path);
+    //retrieve kills from persistence
+    private List<Kill> retrieveKills() throws FileNotFoundException, IOException {
+        FileReader fr = new FileReader(killPath);
+        BufferedReader br = new BufferedReader(fr);
+        Gson gson = new Gson();
+        List<Kill> kills = gson.fromJson(br, new TypeToken<List<Kill>>() {
+        }.getType());
+        br.close();
+        fr.close();
+        return kills;
+    }
+
+    //persist a page, just JSONs written to file for now.
+    private void persistPage(RaidPhpPage page) throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(page);
+        FileWriter fw = new FileWriter(pagePath);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(json);
+        bw.close();
+        fw.close();
+    }
+
+    //retrieve a page from persistence
+    private RaidPhpPage retrievePage() throws FileNotFoundException, IOException {
+        FileReader fr = new FileReader(pagePath);
         BufferedReader br = new BufferedReader(fr);
         Gson gson = new Gson();
         RaidPhpPage page = gson.fromJson(br, new TypeToken<RaidPhpPage>() {
@@ -179,45 +208,51 @@ public class RaidPhpParser {
         return page;
     }
 
+    //grab a page and persist it.
     public static void persistTest() throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
         RaidPhpPage rpp3 = parser.crawl();
-        parser.persist(rpp3);
-
+        parser.persistPage(rpp3);
     }
 
     public static void comparisonTest() throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
 
-        RaidPhpPage rpp = new RaidPhpPage(null, null);
-        rpp = parser.crawl();
+        RaidPhpPage newPage = new RaidPhpPage(null, null);
+        newPage = parser.crawl();
 
-        RaidPhpPage lastPage = parser.retrieve();
-        System.out.println("\nComparing current rpp ID [" + rpp.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
-        if (!rpp.equals(lastPage)) {
+        RaidPhpPage lastPage = parser.retrievePage();
+        System.out.println("\nComparing current rpp ID [" + newPage.getPage_id() + "] to last rpp ID [" + lastPage.getPage_id() + "]\n");
+        if (!newPage.equals(lastPage)) {
             System.out.println("There has been a change.");
             //get a list of the old targets to make a kill list
-            System.out.println("lastPage = "+lastPage);
-            List<RaidTarget> changedTargets = rpp.getChangedTargets(lastPage);
-            System.out.println("The list of changed targets\n"+changedTargets);
+            System.out.println("lastPage = " + lastPage);
+            List<RaidTarget> changedTargets = newPage.getChangedTargets(lastPage);
+            System.out.println("The list of changed targets\n" + changedTargets);
             List<Kill> kills = new ArrayList();
             for (RaidTarget cRT : changedTargets) {
-                Kill k = new Kill(cRT, rpp.getTimeRetrieved());
+                Kill k = new Kill(cRT, newPage.getTimeRetrieved());
                 kills.add(k);
             }
-            System.out.println(kills);
-            
-            //TODO: persist the kills list!
-            
+            //System.out.println(kills);
+            List<Kill> temp = parser.retrieveKills();
+            temp.addAll(kills);
+            parser.persistKills(temp);
+            parser.persistPage(newPage);
+
+        } else {
+            System.out.println("They're the same!");
         }
-        else System.out.println("They're the same!");
-        
-        
+
         System.out.println("Done.");
     }
 
     public static void main(String[] args) throws IOException {
-        //persistTest();
+        RaidPhpParser parser = new RaidPhpParser();
+
+        //persistTest();//use this to crawl and load a page into persistence
         comparisonTest();
+        List<Kill> kills = parser.retrieveKills();
+        System.out.println(kills);
     }
 }

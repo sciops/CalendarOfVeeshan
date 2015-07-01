@@ -197,6 +197,7 @@ public class RaidPhpParser {
         if (!rpp.equals(lastPage)) {
             System.out.println("There has been a change.");
             //get a list of the old targets to make a kill list
+            System.out.println("lastPage = "+lastPage);
             List<RaidTarget> changedTargets = rpp.getChangedTargets(lastPage);
             System.out.println("The list of changed targets\n"+changedTargets);
             List<Kill> kills = new ArrayList();
@@ -205,13 +206,18 @@ public class RaidPhpParser {
                 kills.add(k);
             }
             System.out.println(kills);
+            
+            //TODO: persist the kills list!
+            
         }
+        else System.out.println("They're the same!");
         
         
         System.out.println("Done.");
     }
 
     public static void main(String[] args) throws IOException {
+        //persistTest();
         comparisonTest();
     }
 }

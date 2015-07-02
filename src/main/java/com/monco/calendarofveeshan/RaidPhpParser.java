@@ -163,7 +163,7 @@ public class RaidPhpParser {
     }
 
     //persist kills, just JSONs written to file for now.
-    private void persistKills(List<Kill> kills) throws IOException {
+    public void persistKills(List<Kill> kills) throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(kills);
         FileWriter fw = new FileWriter(killPath);
@@ -174,7 +174,7 @@ public class RaidPhpParser {
     }
 
     //retrieve kills from persistence
-    private List<Kill> retrieveKills() throws FileNotFoundException, IOException {
+    public List<Kill> retrieveKills() throws FileNotFoundException, IOException {
         FileReader fr = new FileReader(killPath);
         BufferedReader br = new BufferedReader(fr);
         Gson gson = new Gson();
@@ -186,7 +186,7 @@ public class RaidPhpParser {
     }
 
     //persist a page, just JSONs written to file for now.
-    private void persistPage(RaidPhpPage page) throws IOException {
+    public void persistPage(RaidPhpPage page) throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(page);
         FileWriter fw = new FileWriter(pagePath);
@@ -197,7 +197,7 @@ public class RaidPhpParser {
     }
 
     //retrieve a page from persistence
-    private RaidPhpPage retrievePage() throws FileNotFoundException, IOException {
+    public RaidPhpPage retrievePage() throws FileNotFoundException, IOException {
         FileReader fr = new FileReader(pagePath);
         BufferedReader br = new BufferedReader(fr);
         Gson gson = new Gson();
@@ -247,6 +247,7 @@ public class RaidPhpParser {
         System.out.println("Done.");
     }
 
+    /*
     public static void main(String[] args) throws IOException {
         RaidPhpParser parser = new RaidPhpParser();
 
@@ -254,5 +255,5 @@ public class RaidPhpParser {
         comparisonTest();
         List<Kill> kills = parser.retrieveKills();
         System.out.println(kills);
-    }
+    }*/
 }

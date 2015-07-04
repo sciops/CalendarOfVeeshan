@@ -19,6 +19,8 @@ public class Kill {
     private Date killTime;
     private String killClass;
     private Guild killGuild;
+    private boolean earthquake;
+    private boolean valid;
 
     //this constructor uses information from the old oldTarget object
     //killTime comes from the new page's retrieval time.
@@ -26,6 +28,8 @@ public class Kill {
         this.mobName = oldTarget.getName();
         this.killTime = killTime;
         this.killClass = oldTarget.getrClass();//the class of the kill is what the old oldTarget said the class would be.
+        this.earthquake = false;
+        this.valid = true;
     }
 
     Kill(RaidTarget oldTarget, Date killTime, Guild guild) {
@@ -33,8 +37,29 @@ public class Kill {
         this.mobName = oldTarget.getName();
         this.killTime = killTime;
         this.killClass = oldTarget.getrClass();
+        this.earthquake = false;
+        this.valid = true;
     }
 
+    public boolean isEarthquake() {
+        return earthquake;
+    }
+
+    public void setEarthquake(boolean earthquake) {
+        this.earthquake = earthquake;
+        if (earthquake) {
+            this.valid = false;
+        }
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+    
     public String getMobName() {
         return mobName;
     }
@@ -55,9 +80,5 @@ public class Kill {
     public String toString() {
         return "\nKill{" + "mobName=" + mobName + ", killTime=" + killTime + ", killClass=" + killClass + ", killGuild=" + killGuild + '}';
     }
-    
-    
-
-
 
 }

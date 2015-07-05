@@ -83,6 +83,20 @@ public class KillController {
 
         return "wkiclone";
     }
+    
+    //clone of https://www.project1999.com/raid.php
+    @RequestMapping("/raidclone")
+    public String raidclone(ModelMap model) throws IOException {
+        String output = "";
+        
+        output+="TEST RAID BODY";
+        
+        model.addAttribute("raidbody",output);
+
+        return "raid";
+    }
+
+    
  
 }
 

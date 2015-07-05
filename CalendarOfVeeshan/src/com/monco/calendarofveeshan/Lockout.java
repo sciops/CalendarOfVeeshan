@@ -20,7 +20,21 @@ public class Lockout {
         this.remainingLockouts = remainingLockouts;
     }
     
-    @Override
+    
+    
+    public Guild getGuild() {
+		return guild;
+	}
+
+
+
+	public int getRemainingLockouts() {
+		return remainingLockouts;
+	}
+
+
+
+	@Override
     public String toString() {
         return "\n"+ guild.getName() + ", " + remainingLockouts;
     }

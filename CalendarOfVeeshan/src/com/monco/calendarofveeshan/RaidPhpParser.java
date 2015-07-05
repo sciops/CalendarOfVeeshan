@@ -152,8 +152,9 @@ public class RaidPhpParser {
 
     //removes space from string, including this weird unicode whitespace
     private String remSpace(String string) {
-        string = StringUtils.deleteWhitespace(string);//https://stackoverflow.com/questions/5455794/removing-whitespace-from-strings-in-java
-        string = string.replace("\u00a0", "");//https://stackoverflow.com/questions/8501072/string-unicode-remove-char-from-the-string
+        //string = StringUtils.deleteWhitespace(string);//https://stackoverflow.com/questions/5455794/removing-whitespace-from-strings-in-java
+        string = string.replace(" ", "");
+    	string = string.replace("\u00a0", "");//https://stackoverflow.com/questions/8501072/string-unicode-remove-char-from-the-string
         return string;
     }
     

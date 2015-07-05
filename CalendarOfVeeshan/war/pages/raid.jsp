@@ -374,157 +374,54 @@ a.shade:active, a.shade:hover {
 		align="center">
 		<tr>
 			<td valign="top" width="50%">
-					<table class="tborder" cellpadding="6" cellspacing="1" border="0"
-					width="100%" align="center">
+					<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
 					<tr>
 						<td class="thead">Kunark</td>
 						<td class="thead">Next Spawn</td>
 						<td class="thead">Lockouts</td>
 					</tr>
 					${kunarktargets}
-					<tr>
-						<td class="alt1" align="left" width="100"><b>Trakanon</b></td>
-						<td class="alt1" width="75"><font color='blue'><b>Class R</b></font color></td>
-						<td class="alt1"><i>Azure Guard (2);&nbsp;Omni (2);&nbsp;Taken (1)</i></td>
-					<tr>
-						<td class="alt1" align="left" width="100"><b>Gorenaire</b></td>
-						<td class="alt1" width="75"><font color='green'><b><i>FFA</i></b></font color></td>
-						<td class="alt1"><i>Taken (1)</i></td>
-					<tr>
-						<td class="alt1" align="left" width="100"><b>Talendor</b></td>
-						<td class="alt1" width="75"><font color='blue'><b>Class R</b></font color></td>
-						<td class="alt1"><i>Taken (1);&nbsp;Bregan D`Aerth (2)</i></td>
-					<tr>
-						<td class="alt1" align="left" width="100"><b>Severilous</b></td>
-						<td class="alt1" width="75"><font color='red'><b>Class C</b></font color></td>
-						<td class="alt1"><i>Forsaken (1);&nbsp;Taken (2)</i></td>
-					<tr>
-						<td class="alt1" align="left" width="100"><b>Venril Sathir</b></td>
-						<td class="alt1" width="75"><font color='blue'><b>Class R</b></font color></td>
-						<td class="alt1"><i>Taken (1);&nbsp;Azure Guard (2);&nbsp;Europa (2)</i></td>
-					<tr>
-						<td class="alt1" align="left" width="100"><b>Faydedar</b></td>
-						<td class="alt1" width="75"><font color='red'><b>Class C</b></font color></td>
-						<td class="alt1"><i>Taken (2);&nbsp;Forsaken (1)</i></td>					
-					</tr>
 				</table>
 				</td>
 				<td valign="top" width="50%">
-		<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
-			<tr>
-				<td class="thead">Planes</td>
-				<td class="thead">Next Spawn</td>
-				<td class="thead">Lockouts</td>
+					<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
+					<tr>
+						<td class="thead">Planes</td>
+						<td class="thead">Next Spawn</td>
+						<td class="thead">Lockouts</td>
+					</tr>
+					${planestargets}			
+					</table>
+					<br>
+					<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
+					<tr>
+					<td class="thead">Classic</td>
+					<td class="thead">Next Spawn</td>
+					<td class="thead">Lockouts</td>
+					</tr> 
+					${classictargets}
+					</table> 
+				</td>
 			</tr>
-			${planestargets}			
 			<tr>
-				<td class="alt1" align="left" width="100"><b>Cazic Thule</b></td>
-				<td class="alt1" width="75"><font color='green'><b><i>FFA</i></b></font color></td>
-				<td class="alt1"><i>Taken (2);&nbsp;Azure Guard (1);&nbsp;Omni (1);&nbsp;Europa (1)</i></td>
-			<tr>
-				<td class="alt1" align="left" width="100"><b>Dracoliche</b></td>
-				<td class="alt1" width="75"><font color='green'><b><i>FFA</i></b></font color></td>
-				<td class="alt1"><i>Omni (1);&nbsp;Azure Guard (1);&nbsp;Europa (1);&nbsp;Taken (2)</i></td>
-			<tr>
-				<td class="alt1" align="left" width="100"><b>Innoruuk</b></td>
-				<td class="alt1" width="75"><font color='blue'><b>Class R</b></font color></td>
-				<td class="alt1"><i>Taken (2);&nbsp;Azure Guard (1)</i></td>
-			<tr>
-				<td class="alt1" align="left" width="100"><b>Maestro</b></td>
-				<td class="alt1" width="75"><font color='green'><b><i>FFA</i></b></font color></td>
-				<td class="alt1"><i>Bregan D`Aerth (1)</i></td>
-			</tr>
-		</table>
-		<br>
-		<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
-			<tr>
-				<td class="thead">Classic</td>
-				<td class="thead">Next Spawn</td>
-				<td class="thead">Lockouts</td>
-			</tr> 
-			${classictargets}			
-			<tr>
-				<td class="alt1" align="left" width="100"><b>Lord Nagafen</b></td>
-				<td class="alt1" width="75"><font color='green'><b><i>FFA</i></b></font color></td>
-				<td class="alt1"><i>Taken (2);&nbsp;Bregan D`Aerth (1)</i></td>
-			<tr>
-				<td class="alt1" align="left" width="100"><b>Lady Vox</b></td>
-				<td class="alt1" width="75"><font color='blue'><b>Class R</b></font color></td>
-				<td class="alt1"><i>Taken (2);&nbsp;Omni (1);&nbsp;Europa (1)</i></td> 
-			</tr>
-		</table> 
-	</td>
-	</tr>
-	<tr>
-		<td valign="top"> 
+			<td valign="top"> 
 			<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
 				<tr>
 					<td class="thead" colspan="3">Class C Guilds</td>
 				</tr> 
 				${cguilds}				
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='red'><b>Asgard</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='red'><b>Forsaken</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='red'><b>Haggard Krew</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='red'><b>Inglourious Basterds</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='red'><b>Rampage</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='red'><b>The Mystical Order</b></font color></td>
-				</tr>
 			</table> 
-		</td>
-		<td valign="top"> 
+			</td>
+			<td valign="top"> 
 			<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%" align="center">
 				<tr>
 					<td class="thead" colspan="3">Class R Guilds</td>
 				</tr> 
-				${rguilds}					
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Anonymous</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Azure Guard</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Bregan D`Aerth</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Divinity</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Doljonijiarnimorinar</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Europa</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Indignation</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Moonlight Crusaders</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Omni</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>Taken</b></font color></td>
-				</tr>
-				<tr>
-					<td class="alt1" align="left" width="100"><font color='blue'><b>The A-Team</b></font color></td>
-				</tr> 
+				${rguilds}	
 			</table> 
-		</td>
-	</tr>
-	<tr>
+			</td>
+		</tr>
+		<tr>
 		<td colspan="2"> 
 			<table class="tborder" cellpadding="6" cellspacing="1" border="0"
 				width="100%" align="center">

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.monco.calendarofveeshan.Kill;
 import com.monco.calendarofveeshan.RaidPhpParser;
  
+//controller for managing requests for kill list information
 @RestController
 public class KillController {
     List<Kill> kills;

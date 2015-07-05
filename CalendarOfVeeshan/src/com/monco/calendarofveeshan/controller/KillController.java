@@ -49,7 +49,7 @@ public class KillController {
         return this.kills;
     }
     
-    //accept a JSON and replace the kills list with it
+    //accept a JSON and replace the kills list with it.
     @RequestMapping("/setkills")
     public String setkills(@RequestParam(value="json", defaultValue="Invalid.")String json) {
         if (json.equals("Invalid.")) return json;

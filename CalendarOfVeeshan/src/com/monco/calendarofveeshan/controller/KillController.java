@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.monco.calendarofveeshan.Kill;
 import com.monco.calendarofveeshan.RaidPhpParser;
  
@@ -38,19 +39,25 @@ public class KillController {
 	
 	//just return the last kill in the list
     @RequestMapping("/lastkill")
-    public Kill kill() throws IOException {
-    	//ObjectMapper mapper = new ObjectMapper();
-    	//model.addAttribute("kills", mapper.writeValueAsString(kills));
-        return kills.get(kills.size() - 1);
+    public String kill(ModelMap model) throws IOException {
+    	Kill kill = kills.get(kills.size() - 1);
+    	Gson gson = new Gson();
+    	String json = gson.toJson(kill);
+    	model.addAttribute("lastkill", json);
+        return "lastkill";
     }
 
     //expose all kills in a JSON format
     @RequestMapping("/kills")
-    public List<Kill> getkills() throws IOException {
-        return this.kills;
+    public String getkills(ModelMap model) throws IOException {
+    	RaidPhpParser parser = new RaidPhpParser();
+    	String json = parser.killsToJson(kills);
+    	model.addAttribute("kills", json);   
+        return "kills";
     }
     
     //accept a JSON and replace the kills list with it.
+    //see comment at bottom of this document for a test URL w/ json to load data
     @RequestMapping("/setkills")
     public String setkills(@RequestParam(value="json", defaultValue="Invalid.")String json) {
         if (json.equals("Invalid.")) return json;
@@ -60,15 +67,10 @@ public class KillController {
     }
 
     //clone of http://whenkilledit.alwaysdata.net/
+    //TODO: handle null case for kills
     @RequestMapping("/wkiclone")
-    public String wkiclone() throws IOException {
-        String output = "<html><head>";
-        output+="<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />";
-        output+="<meta http-equiv=\"Cache-Control\" content=\"no-store\" />";
-        //output+="<link rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\" />";
-        output+="<title>When Killed It Clone</title>";
-        output+="<style>body { background: #EBEBE8; } p { color: #6b6b6b; }</style>";
-        output+="</head><body>";
+    public String wkiclone(ModelMap model) throws IOException {
+        String output = "";
         
         for (Kill kill : this.kills) {
             SimpleDateFormat sdf;
@@ -77,9 +79,12 @@ public class KillController {
             output += "<p>[ " + kill.getKillClass() + " " + kill.getMobName() + " ] " + date+"</p>";
         }
         
-        output+="</body></html>";
+        model.addAttribute("wkicbody",output);
 
-        return output;
+        return "wkiclone";
     }
  
 }
+
+//see setkills()
+//http://localhost:8888/setkills?json=[{%22mobName%22:%22Trakanon%22,%22killTime%22:%22Jul%201,%202015%205:01:03%20PM%22,%22killClass%22:%22Class%20R%22},{%22mobName%22:%22Trakanon%22,%22killTime%22:%22Jul%201,%202015%205:06:12%20PM%22,%22killClass%22:%22Class%20R%22},{%22mobName%22:%22Lord%20Nagafen%22,%22killTime%22:%22Jul%201,%202015%205:08:43%20PM%22,%22killClass%22:%22Class%20C%22},{%22mobName%22:%22Talendor%22,%22killTime%22:%22Jul%201,%202015%205:09:25%20PM%22,%22killClass%22:%22Class%20R%22},{%22mobName%22:%22Venril%20Sathir%22,%22killTime%22:%22Jul%201,%202015%205:09:25%20PM%22,%22killClass%22:%22Class%20R%22}]

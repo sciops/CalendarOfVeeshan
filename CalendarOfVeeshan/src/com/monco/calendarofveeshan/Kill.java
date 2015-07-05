@@ -22,6 +22,9 @@ public class Kill {
     private boolean earthquake;
     private boolean valid;
 
+    Kill() {   	
+    }
+    
     //this constructor uses information from the old oldTarget object
     //killTime comes from the new page's retrieval time.
     Kill(RaidTarget oldTarget, Date killTime) {
@@ -76,7 +79,23 @@ public class Kill {
         return killGuild;
     }
 
-    @Override
+    public void setMobName(String mobName) {
+		this.mobName = mobName;
+	}
+
+	public void setKillTime(Date killTime) {
+		this.killTime = killTime;
+	}
+
+	public void setKillClass(String killClass) {
+		this.killClass = killClass;
+	}
+
+	public void setKillGuild(Guild killGuild) {
+		this.killGuild = killGuild;
+	}
+
+	@Override
     public String toString() {
         return "\nKill{" + "mobName=" + mobName + ", killTime=" + killTime + ", killClass=" + killClass + ", killGuild=" + killGuild + '}';
     }

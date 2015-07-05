@@ -156,6 +156,11 @@ public class RaidPhpParser {
         string = string.replace("\u00a0", "");//https://stackoverflow.com/questions/8501072/string-unicode-remove-char-from-the-string
         return string;
     }
+    
+    public String objToJson(Object obj) {
+    	Gson gson = new Gson();
+    	return gson.toJson(obj);
+    }
 
     public String killsToJson(List<Kill> kills) throws IOException {
         Gson gson = new Gson();

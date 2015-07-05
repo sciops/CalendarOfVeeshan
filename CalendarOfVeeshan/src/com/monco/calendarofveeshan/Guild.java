@@ -5,7 +5,6 @@
  */
 package com.monco.calendarofveeshan;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,7 +14,6 @@ import java.util.Objects;
 public class Guild {
     private String name;
     private String raidClass;
-    //private List<Lockout> lockouts;
 
     public Guild(String name, String raidClass) {
         this.name = name;

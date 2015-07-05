@@ -8,27 +8,10 @@ package com.monco.calendarofveeshan;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.jdo.FetchGroup;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.datastore.DataStoreCache;
-import javax.jdo.listener.InstanceLifecycleListener;
-import javax.jdo.metadata.JDOMetadata;
-import javax.jdo.metadata.TypeMetadata;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -43,8 +26,8 @@ public class RaidPhpParser {
 
     //final String pagePath = "raidPHPPage.json";
     //final String killPath = "kill.json";
-    //final String URL = "https://www.project1999.com/raid.php";
-    final String URL = "http://127.0.0.1/Project%201999%20-%20Raid%20Policy.html";
+    final String URL = "https://www.project1999.com/raid.php";
+    //final String URL = "http://127.0.0.1/Project%201999%20-%20Raid%20Policy.html";
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList<RaidTarget>();
     //list for storing all the guilds on the page
@@ -105,7 +88,7 @@ public class RaidPhpParser {
     }
 
     private List<RaidTarget> mapSpawnTable(int height, Element table) {
-        List<RaidTarget> raidTargets = new ArrayList();
+        List<RaidTarget> raidTargets = new ArrayList<RaidTarget>();
 
         // table loop, skip the header row
         for (int row = 1; row < height; row++) {
@@ -114,14 +97,14 @@ public class RaidPhpParser {
             String targetName = table.child(row).child(0).text();
             String targetClass = table.child(row).child(1).text();
             RaidTarget rt = new RaidTarget(targetName, targetClass);
-            List<Lockout> targetLockouts = new ArrayList();
+            List<Lockout> targetLockouts = new ArrayList<Lockout>();
 
             //get target's lockouts
             String targetLOText = table.child(row).child(2).text();
             //System.out.println("lockOuts text = " + targetLOText);
             //break this up by semi-colons, result is an array of strings containing unsplit guild/lockout pairs e.g. "Taken (1)"
             List<String> guildLOPairs = Arrays.asList(targetLOText.split("\\s*;\\s*"));
-            List<String> splitGuildLOPair = new ArrayList();
+            List<String> splitGuildLOPair = new ArrayList<String>();
             //loop to split all the pairs
             for (String guildLOPair : guildLOPairs) {
                 //System.out.println("guildLOPair=" + guildLOPair);
@@ -158,7 +141,7 @@ public class RaidPhpParser {
 
     //parse a list of guilds from the guild tables in the page
     private List<Guild> mapGuildTable(int height, Element table, String raidClass) {
-        List<Guild> guilds = new ArrayList();
+        List<Guild> guilds = new ArrayList<Guild>();
         for (int row = 1; row < height; row++) {
             String guName = table.child(row).child(0).text();
             guName = remSpace(guName);

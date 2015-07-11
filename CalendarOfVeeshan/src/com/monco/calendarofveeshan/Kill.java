@@ -5,6 +5,7 @@
  */
 package com.monco.calendarofveeshan;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,10 +20,10 @@ public class Kill {
     private Date killTime;
     private String killClass;
     private Guild killGuild;
-    private boolean earthquake;
-    private boolean valid;
+    private boolean earthquake = false;
+    private boolean valid = true;
 
-    Kill() {   	
+    public Kill() {   	
     }
     
     //this constructor uses information from the old oldTarget object
@@ -31,8 +32,6 @@ public class Kill {
         this.mobName = oldTarget.getName();
         this.killTime = killTime;
         this.killClass = oldTarget.getrClass();//the class of the kill is what the old oldTarget said the class would be.
-        this.earthquake = false;
-        this.valid = true;
     }
 
     Kill(RaidTarget oldTarget, Date killTime, Guild guild) {
@@ -40,8 +39,6 @@ public class Kill {
         this.mobName = oldTarget.getName();
         this.killTime = killTime;
         this.killClass = oldTarget.getrClass();
-        this.earthquake = false;
-        this.valid = true;
     }
 
     public boolean isEarthquake() {
@@ -93,6 +90,14 @@ public class Kill {
 
 	public void setKillGuild(Guild killGuild) {
 		this.killGuild = killGuild;
+	}
+	
+	//construct a string to output the kill as a line in the wki clone
+	public String getWkiLine() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM HH:mm");
+		String date = sdf.format(getKillTime());
+		return "[ " + getKillClass() + " " + getMobName()
+				+ " ] " + date + "";
 	}
 
 	@Override

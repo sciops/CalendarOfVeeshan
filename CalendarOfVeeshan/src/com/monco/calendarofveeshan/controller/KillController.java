@@ -2,6 +2,7 @@ package com.monco.calendarofveeshan.controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ import com.monco.calendarofveeshan.validator.*;
 public class KillController {
 	List<Kill> kills;
 	List<Kill> curatedKills;
+	String [] checked;
+	KillForm killForm;
 	// DI via Spring
 	String message;
 
@@ -90,27 +93,25 @@ public class KillController {
 		if (json.equals("Invalid."))
 			return json;
 		RaidPhpParser parser = new RaidPhpParser();
-		this.kills = parser.jsonToKills(json);
-		return "Done.";
+		kills = parser.jsonToKills(json);
+		killForm = new KillForm();
+		killForm.setKills(kills);
+		return "jsonSubmitSuccess";
 	}
 
 	// clone of http://whenkilledit.alwaysdata.net/
-	// TODO: handle null case for kills
 	@RequestMapping("/wkiclone")
 	public String wkiclone(ModelMap model) throws IOException {
 		String output = "";
-
-		for (Kill kill : this.kills) {
-			output += "\n<p>" + kill.getWkiLine() + "</p>";
-		}
-
+		if (kills == null) output+="kills list is NULL";
+		else for (Kill kill : kills) 
+				output += "\n<p>" + kill.getWkiLine() + "</p>";
 		model.addAttribute("wkicbody", output);
-
 		return "wkiclone";
 	}
 
 	// clone of https://www.project1999.com/raid.php
-	@RequestMapping("/raidclone")
+	@RequestMapping("/raid")
 	public String raidclone(ModelMap model) throws IOException {
 		// injection test, text above the tables
 		String output = "";
@@ -193,56 +194,59 @@ public class KillController {
 
 
 	// http://www.mkyong.com/spring-mvc/spring-mvc-form-handling-annotation-example/
-	//KillValidator killValidator;
+	// http://fruzenshtein.com/spring-mvc-form-handling/
 	
-	//@Autowired
-	public KillController(
-			//KillValidator killValidator
-			) {
-		//this.killValidator = killValidator;
-	}
-
-	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@ModelAttribute("kForm") KillForm killform,
-			BindingResult result, SessionStatus status) {
-
-		//killValidator.validate(killform, result);
-
-		if (result.hasErrors()) {
-			// if validator failed
-			return "kform";
-		} else {
-			status.setComplete();
-			// form success
-			return "ksuccess";
-		}
-	}
+	@RequestMapping(method = RequestMethod.POST) 
+    public ModelAndView processSubmit(@ModelAttribute("kForm") KillForm killform,
+    		BindingResult result, SessionStatus status) { 
+		
+		//take killform object and move the list to kills
+		kills = killform.getCheckedKillsList();
+		//killForm.setKills(kills);
+		
+        ModelAndView modelAndView = new ModelAndView();  
+        modelAndView.setViewName("ksuccess");            
+        modelAndView.addObject("checkedList", killform.getCheckedResult());            
+        return modelAndView;  
+    }   
 
 	@RequestMapping(value = "/killsform", method = RequestMethod.GET)
-	public String initForm(ModelMap model) {
+	public String initForm(ModelMap model) throws ParseException {
 
+		// kForm used to return results back to the controller
 		KillForm form = new KillForm();
 		//default checked values
-		form.setCheckedKills(new String[] { "Default value here" });
+		form.setCheckedKills(new String[] {});
 
 		// command object
-		model.addAttribute("kForm", new KillForm());
-
+		model.addAttribute("kForm", form);
+		
 		// return form view
 		return "kform";
 	}
 
-	@ModelAttribute("formList")
+	//populate the list of items to select with checkboxes
+	@ModelAttribute("formlist")
 	public List<String> populateFormList() {
 
 		// Data referencing for checkboxes
-		List<String> formList = new ArrayList<String>();
+		List<String> formlist = new ArrayList<String>();
 		if (kills!=null)
-		for (Kill kill : kills) {
-			formList.add("\n"+kill.getWkiLine());
-		}
-		else formList.add("ERROR: KILL LIST IS NULL");
-		return formList;
+		for (Kill kill : kills) 
+			formlist.add("\n"+kill.getWkiLine());
+		//else formList.add("ERROR: KILL LIST IS NULL");
+		return formlist;
+	}
+	
+	@ModelAttribute("checkedList")
+	public List<String> popCheckedList() {
+
+		List<String> checkedList = new ArrayList<String>();
+		if (this.checked != null) 
+			for (String s:this.checked)
+				checkedList.add("\n"+s);
+		//else System.out.println("ERROR: checked array is NULL.");
+		return checkedList;
 	}
 
 	@InitBinder

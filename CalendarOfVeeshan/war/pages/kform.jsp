@@ -2,7 +2,7 @@
 
 <html>
 <body>
-<h2>Kills list curation</h2><br>
+<h2>Kills list curation form</h2><br>
 Check the boxes of the kills you want removed and submit.
 <form:form method="POST" commandName="kForm">
 <form:checkboxes element="div" items="${formlist}" path="checkedKills" />

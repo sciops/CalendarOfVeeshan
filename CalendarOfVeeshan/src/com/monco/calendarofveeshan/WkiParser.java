@@ -27,11 +27,11 @@ public class WkiParser {
         Document doc = Jsoup.connect(url).get();
         //https://stackoverflow.com/questions/7036332/jsoup-select-and-iterate-all-elements
         Elements body = doc.body().select("p");
-        List<Kill> killList = new ArrayList();
+        List<Kill> killList = new ArrayList<Kill>();
         String s;
         for (Element e : body) {
         	s = e.ownText();
-        	System.out.println("s:"+s);
+        	//System.out.println("s:"+s);
         	killList.add(kf.wkiLineToKill(s));
         }
         

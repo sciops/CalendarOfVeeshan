@@ -5,18 +5,10 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -38,7 +30,6 @@ import com.monco.calendarofveeshan.RaidPhpPage;
 import com.monco.calendarofveeshan.RaidPhpParser;
 import com.monco.calendarofveeshan.RaidTarget;
 import com.monco.calendarofveeshan.WkiParser;
-import com.monco.calendarofveeshan.validator.*;
 
 //controller for managing requests for kill list information
 @RestController

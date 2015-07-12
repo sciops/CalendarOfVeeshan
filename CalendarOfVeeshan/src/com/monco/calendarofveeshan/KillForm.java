@@ -33,7 +33,7 @@ public class KillForm {
 	}
 
 	public void setCheckedKills(String[] checkedKills) throws ParseException {
-		List<Kill> checkedKillsList = new ArrayList();
+		List<Kill> checkedKillsList = new ArrayList<Kill>();
 		String checkedResult = "";
 		for (String s : checkedKills) {
 			checkedKillsList.add(wkiLineToKill(s));

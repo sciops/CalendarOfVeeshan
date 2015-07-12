@@ -7,10 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 public class KillForm {
-	List<Kill> kills;
-	List<Kill> checkedKillsList;
-	String[] checkedKills;
-	String checkedResult;
+	List<Kill> kills;//list of kills
+	List<Kill> checkedKillsList;//list of verified kills
+	String[] checkedKills;//string array of verified kills for default checked on boxes
+	String checkedResult;//a long string of all the wkiLines separated by newlines
 
 	public KillForm() {
 		checkedKills = new String[] {};
@@ -44,11 +44,25 @@ public class KillForm {
 		this.checkedKillsList = checkedKillsList;
 	}
 
+	public void setCheckedKills(List<Kill> checkedKillsList) {
+		String[] checkedKills = new String[checkedKillsList.size()];
+		String checkedResult = "";
+		int i = 0;
+		for (Kill k : checkedKillsList) {
+			checkedKills[i] = k.getWkiLine();
+			checkedResult += "\n" + k.getWkiLine();
+			i++;
+		}
+		this.checkedResult = checkedResult;
+		this.checkedKills = checkedKills;
+		this.checkedKillsList = checkedKillsList;
+	}
+
 	public Kill wkiLineToKill(String wkiLine) throws ParseException {
 		int ob = wkiLine.indexOf("[");
 		int cb = wkiLine.indexOf("]");
-		//System.out.println("wkiLine:"+wkiLine+" ob:"+ob+" cb:"+cb);
-		if ((cb == -1)||(ob == -1)) // not found
+		// System.out.println("wkiLine:"+wkiLine+" ob:"+ob+" cb:"+cb);
+		if ((cb == -1) || (ob == -1)) // not found
 			return null;
 		Kill kill = new Kill();
 		String mobName;
@@ -62,7 +76,7 @@ public class KillForm {
 			killClass = wkiLine.substring(ob + 2, ob + 9);
 			mobName = wkiLine.substring(ob + 10, cb - 1);
 		}
-		//System.out.println("New Kill:"+mobName+","+killClass);
+		// System.out.println("New Kill:"+mobName+","+killClass);
 		kill.setKillClass(killClass);
 		kill.setMobName(mobName);
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM HH:mm");

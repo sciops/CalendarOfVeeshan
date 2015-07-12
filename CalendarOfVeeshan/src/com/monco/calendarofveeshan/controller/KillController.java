@@ -37,6 +37,7 @@ import com.monco.calendarofveeshan.Lockout;
 import com.monco.calendarofveeshan.RaidPhpPage;
 import com.monco.calendarofveeshan.RaidPhpParser;
 import com.monco.calendarofveeshan.RaidTarget;
+import com.monco.calendarofveeshan.WkiParser;
 import com.monco.calendarofveeshan.validator.*;
 
 //controller for managing requests for kill list information
@@ -90,20 +91,32 @@ public class KillController {
 	@RequestMapping("/setkills")
 	public String setkills(
 			@RequestParam(value = "json", defaultValue = "Invalid.") String json) {
-		if (json.equals("Invalid."))
-			return json;
+		if (json.equals("Invalid."))//TODO:also actually test for json invalidity
+			return "jsonInvalid";
 		RaidPhpParser parser = new RaidPhpParser();
 		kills = parser.jsonToKills(json);
 		killForm = new KillForm();
 		killForm.setKills(kills);
 		return "jsonSubmitSuccess";
 	}
+	//TODO:fetch and parse wki for importing kills
+	@RequestMapping("/parsewki")
+	public String parseWki(ModelMap model) throws IOException, ParseException {
 
-	// clone of http://whenkilledit.alwaysdata.net/
+		WkiParser parser = new WkiParser();
+		
+		killForm = parser.crawl();
+		kills =killForm.getKills();
+		
+		return wkiclone(model);
+	}
+
+	// clone of http://whenkilledit.alwaysdata.net using our pojos
 	@RequestMapping("/wkiclone")
 	public String wkiclone(ModelMap model) throws IOException {
 		String output = "";
-		if (kills == null) output+="kills list is NULL";
+		if (kills == null) output+="\nkills list is NULL";
+		else if (kills.size() == 0) output+="\nkills list is EMPTY";
 		else for (Kill kill : kills) 
 				output += "\n<p>" + kill.getWkiLine() + "</p>";
 		model.addAttribute("wkicbody", output);
@@ -216,7 +229,8 @@ public class KillController {
 		// kForm used to return results back to the controller
 		KillForm form = new KillForm();
 		//default checked values
-		form.setCheckedKills(new String[] {});
+		form.setCheckedKills(kills);
+		checked = form.getCheckedKills();
 
 		// command object
 		model.addAttribute("kForm", form);

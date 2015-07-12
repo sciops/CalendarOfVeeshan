@@ -20,8 +20,9 @@ public class Kill {
     private Date killTime;
     private String killClass;
     private Guild killGuild;
-    private boolean earthquake = false;
     private boolean valid = true;
+    private boolean earthquake = false;
+    
 
     public Kill() {   	
     }

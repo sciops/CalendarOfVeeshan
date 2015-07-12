@@ -26,7 +26,7 @@ public class RaidPhpParser {
 
     //final String pagePath = "raidPHPPage.json";
     //final String killPath = "kill.json";
-    final String URL = "https://www.project1999.com/raid.php";
+    final String defURL = "https://www.project1999.com/raid.php";
     //final String URL = "http://127.0.0.1/Project%201999%20-%20Raid%20Policy.html";
     //list for storing all the RaidTargets on the page
     List<RaidTarget> raidTargets = new ArrayList<RaidTarget>();
@@ -36,12 +36,12 @@ public class RaidPhpParser {
     RaidPhpPage rpp = new RaidPhpPage(raidTargets, guilds);
 
     public RaidPhpPage crawl() throws IOException {
-        return crawl(URL);
+        return crawl(defURL);
     }
 
     public RaidPhpPage crawl(String url) throws IOException {
         if ((url == null) || (url == "")) {
-            url = URL;
+            url = defURL;
         }
         //fetch the document and map to DOM
         Document doc = Jsoup.connect(url).get();

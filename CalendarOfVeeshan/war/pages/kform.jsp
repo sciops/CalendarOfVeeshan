@@ -1,13 +1,22 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 <body>
 <h2>Kills list curation form</h2><br>
-Check the boxes of the kills you want removed and submit.
+<b>Uncheck</b> the boxes of the kills you want removed and submit.
+<!--
 <form:form method="POST" commandName="kForm">
-<form:checkboxes element="div" items="${formlist}" path="checkedKills" />
+<form:checkboxes element="div" items="${formlist}" path="checkedKills" /> 
 <p><input type="submit" value="Submit" /><input type="reset" value="Reset" /></p>
-</form:form>
+</form:form>-->
+
+<!-- https://stackoverflow.com/questions/6873360/spring-form-taglib-checkboxes-and-the-default-value -->
+<sf:form modelAttribute="kForm" method="post">
+	<form:checkboxes element="div" items="${formlist}" path="checkedKills" itemLabel="wkiLine" itemValue="wkiLine"/>
+	<p><input type="submit" value="Submit" /><input type="reset" value="Reset" /></p>
+</sf:form>
+ 
     <table>
       <tr>
         <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        

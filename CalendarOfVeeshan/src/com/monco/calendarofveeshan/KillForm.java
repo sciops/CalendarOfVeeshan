@@ -64,7 +64,7 @@ public class KillForm {
 		// System.out.println("wkiLine:"+wkiLine+" ob:"+ob+" cb:"+cb);
 		if ((cb == -1) || (ob == -1)) // not found
 			return null;
-		Kill kill = new Kill();
+		
 		String mobName;
 		String killClass;
 		// assign the kill class and mob name inside the brackets
@@ -76,14 +76,10 @@ public class KillForm {
 			killClass = wkiLine.substring(ob + 2, ob + 9);
 			mobName = wkiLine.substring(ob + 10, cb - 1);
 		}
-		// System.out.println("New Kill:"+mobName+","+killClass);
-		kill.setKillClass(killClass);
-		kill.setMobName(mobName);
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM HH:mm");
 		String date_s = wkiLine.substring(cb + 1);
 		Date d = formatter.parse(date_s);
-		kill.setKillTime(d);
-		return kill;
+		return new Kill(killClass,mobName,d);
 	}
 
 	public String getCheckedResult() {

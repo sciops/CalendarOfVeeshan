@@ -5,6 +5,7 @@
  */
 package com.monco.calendarofveeshan;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,8 +24,16 @@ public class Kill {
     private boolean valid = true;
     private boolean earthquake = false;
     
-
-    public Kill() {   	
+    public Kill() {
+    	mobName="Joe Dragon";
+    	killClass="FFA";
+    	killTime = new Date();
+    }
+    
+    public Kill(String killClass, String mobName, Date killTime) {
+    	this.mobName = mobName;
+    	this.killClass = killClass;
+    	this.killTime = killTime;
     }
     
     //this constructor uses information from the old oldTarget object
@@ -96,9 +105,17 @@ public class Kill {
 	//construct a string to output the kill as a line in the wki clone
 	public String getWkiLine() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM HH:mm");
-		String date = sdf.format(getKillTime());
-		return "[ " + getKillClass() + " " + getMobName()
-				+ " ] " + date + "";
+		String date = sdf.format(killTime);
+		String wkiLine = "[ " + killClass + " " + mobName + " ] " + date + "";
+		return wkiLine;
+	}
+	
+	public void setWkiLine(String wkiLine) throws ParseException {
+		KillForm kf = new KillForm();
+		Kill k = kf.wkiLineToKill(wkiLine);
+		mobName = k.getMobName();
+		killClass = k.getKillClass();
+		killTime = k.getKillTime();
 	}
 
 	@Override

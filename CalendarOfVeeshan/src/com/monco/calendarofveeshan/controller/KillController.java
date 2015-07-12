@@ -84,21 +84,22 @@ public class KillController {
 			@RequestParam(value = "json", defaultValue = "Invalid.") String json) {
 		if (json.equals("Invalid."))//TODO:also actually test for json invalidity
 			return "jsonInvalid";
+		
 		RaidPhpParser parser = new RaidPhpParser();
 		kills = parser.jsonToKills(json);
 		killForm = new KillForm();
 		killForm.setKills(kills);
+		killForm.setCheckedKills(kills);
+
 		return "jsonSubmitSuccess";
 	}
+	
 	//TODO:fetch and parse wki for importing kills
 	@RequestMapping("/parsewki")
 	public String parseWki(ModelMap model) throws IOException, ParseException {
-
 		WkiParser parser = new WkiParser();
-		
 		killForm = parser.crawl();
 		kills =killForm.getKills();
-		
 		return wkiclone(model);
 	}
 
@@ -199,29 +200,24 @@ public class KillController {
 
 	// http://www.mkyong.com/spring-mvc/spring-mvc-form-handling-annotation-example/
 	// http://fruzenshtein.com/spring-mvc-form-handling/
-	
-	@RequestMapping(method = RequestMethod.POST) 
-    public ModelAndView processSubmit(@ModelAttribute("kForm") KillForm killform,
-    		BindingResult result, SessionStatus status) { 
-		
-		//take killform object and move the list to kills
-		kills = killform.getCheckedKillsList();
-		//killForm.setKills(kills);
-		
-        ModelAndView modelAndView = new ModelAndView();  
-        modelAndView.setViewName("ksuccess");            
-        modelAndView.addObject("checkedList", killform.getCheckedResult());            
-        return modelAndView;  
-    }   
 
 	@RequestMapping(value = "/killsform", method = RequestMethod.GET)
 	public String initForm(ModelMap model) throws ParseException {
+		
+		if (kills == null) return "killsnullfailure";
 
 		// kForm used to return results back to the controller
 		KillForm form = new KillForm();
+		
 		//default checked values
-		form.setCheckedKills(kills);
-		checked = form.getCheckedKills();
+		//form.setCheckedKills(kills);
+		//checked = form.getCheckedKills();
+		List<Kill> checkedKillsList = kills;//TODO: scan kills list for checked items and populate accordingly
+		form.setCheckedKills(checkedKillsList);
+		form.setKills(kills);
+		
+		//all the items
+		model.addAttribute("formlist",kills);
 
 		// command object
 		model.addAttribute("kForm", form);
@@ -229,17 +225,32 @@ public class KillController {
 		// return form view
 		return "kform";
 	}
+	
+	@RequestMapping(method = RequestMethod.POST) 
+    public ModelAndView processSubmit(@ModelAttribute("kForm") KillForm killform,
+    		BindingResult result, SessionStatus status) { 
+		
+
+		
+		//take killform object and move the list to kills
+		kills = killform.getCheckedKillsList();		
+		
+        ModelAndView modelAndView = new ModelAndView();  
+        modelAndView.setViewName("ksuccess");            
+        modelAndView.addObject("checkedList", killform.getCheckedResult());            
+        return modelAndView;  
+    }   
 
 	//populate the list of items to select with checkboxes
-	@ModelAttribute("formlist")
-	public List<String> populateFormList() {
+	@ModelAttribute("formlist") //formlist
+	public List<String> populateAllItems() {
 
 		// Data referencing for checkboxes
 		List<String> formlist = new ArrayList<String>();
 		if (kills!=null)
 		for (Kill kill : kills) 
 			formlist.add("\n"+kill.getWkiLine());
-		//else formList.add("ERROR: KILL LIST IS NULL");
+		else formlist.add("ERROR: KILL LIST IS NULL");
 		return formlist;
 	}
 	
@@ -253,6 +264,11 @@ public class KillController {
 		//else System.out.println("ERROR: checked array is NULL.");
 		return checkedList;
 	}
+	
+	@ModelAttribute("checkedKillsList")
+	public List<Kill> popCheckedKillsList() {
+		return kills;
+	}	
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

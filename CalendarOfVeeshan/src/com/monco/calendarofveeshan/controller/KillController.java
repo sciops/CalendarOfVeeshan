@@ -5,7 +5,13 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.ModelMap;
@@ -22,6 +28,11 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.*;
 import com.monco.calendarofveeshan.Guild;
 import com.monco.calendarofveeshan.Kill;
 import com.monco.calendarofveeshan.KillForm;
@@ -36,7 +47,7 @@ import com.monco.calendarofveeshan.WkiParser;
 public class KillController {
 	List<Kill> kills;
 	List<Kill> curatedKills;
-	String [] checked;
+	String[] checked;
 	KillForm killForm;
 	// DI via Spring
 	String message;
@@ -82,9 +93,10 @@ public class KillController {
 	@RequestMapping("/setkills")
 	public String setkills(
 			@RequestParam(value = "json", defaultValue = "Invalid.") String json) {
-		if (json.equals("Invalid."))//TODO:also actually test for json invalidity
+		if (json.equals("Invalid."))// TODO:also actually test for json
+									// invalidity
 			return "jsonInvalid";
-		
+
 		RaidPhpParser parser = new RaidPhpParser();
 		kills = parser.jsonToKills(json);
 		killForm = new KillForm();
@@ -93,13 +105,13 @@ public class KillController {
 
 		return "jsonSubmitSuccess";
 	}
-	
-	//TODO:fetch and parse wki for importing kills
+
+	// TODO:fetch and parse wki for importing kills
 	@RequestMapping("/parsewki")
 	public String parseWki(ModelMap model) throws IOException, ParseException {
 		WkiParser parser = new WkiParser();
 		killForm = parser.crawl();
-		kills =killForm.getKills();
+		kills = killForm.getKills();
 		return wkiclone(model);
 	}
 
@@ -107,9 +119,12 @@ public class KillController {
 	@RequestMapping("/wkiclone")
 	public String wkiclone(ModelMap model) throws IOException {
 		String output = "";
-		if (kills == null) output+="\nkills list is NULL";
-		else if (kills.size() == 0) output+="\nkills list is EMPTY";
-		else for (Kill kill : kills) 
+		if (kills == null)
+			output += "\nkills list is NULL";
+		else if (kills.size() == 0)
+			output += "\nkills list is EMPTY";
+		else
+			for (Kill kill : kills)
 				output += "\n<p>" + kill.getWkiLine() + "</p>";
 		model.addAttribute("wkicbody", output);
 		return "wkiclone";
@@ -197,84 +212,124 @@ public class KillController {
 		return "raid";
 	}
 
-
 	// http://www.mkyong.com/spring-mvc/spring-mvc-form-handling-annotation-example/
 	// http://fruzenshtein.com/spring-mvc-form-handling/
 
 	@RequestMapping(value = "/killsform", method = RequestMethod.GET)
 	public String initForm(ModelMap model) throws ParseException {
-		
-		if (kills == null) return "killsnullfailure";
+
+		if (kills == null)
+			return "killsnullfailure";
 
 		// kForm used to return results back to the controller
 		KillForm form = new KillForm();
-		
-		//default checked values
-		//form.setCheckedKills(kills);
-		//checked = form.getCheckedKills();
-		List<Kill> checkedKillsList = kills;//TODO: scan kills list for checked items and populate accordingly
+
+		// default checked values
+		// form.setCheckedKills(kills);
+		// checked = form.getCheckedKills();
+		List<Kill> checkedKillsList = kills;// TODO: scan kills list for checked
+											// items and populate accordingly
 		form.setCheckedKills(checkedKillsList);
 		form.setKills(kills);
-		
-		//all the items
-		model.addAttribute("formlist",kills);
+
+		// all the items
+		model.addAttribute("formlist", kills);
 
 		// command object
 		model.addAttribute("kForm", form);
-		
+
 		// return form view
 		return "kform";
 	}
-	
-	@RequestMapping(method = RequestMethod.POST) 
-    public ModelAndView processSubmit(@ModelAttribute("kForm") KillForm killform,
-    		BindingResult result, SessionStatus status) { 
-		
 
-		
-		//take killform object and move the list to kills
-		kills = killform.getCheckedKillsList();		
-		
-        ModelAndView modelAndView = new ModelAndView();  
-        modelAndView.setViewName("ksuccess");            
-        modelAndView.addObject("checkedList", killform.getCheckedResult());            
-        return modelAndView;  
-    }   
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processSubmit(
+			@ModelAttribute("kForm") KillForm killform, BindingResult result,
+			SessionStatus status) {
 
-	//populate the list of items to select with checkboxes
-	@ModelAttribute("formlist") //formlist
+		// take killform object and move the list to kills
+		kills = killform.getCheckedKillsList();
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("ksuccess");
+		modelAndView.addObject("checkedList", killform.getCheckedResult());
+		return modelAndView;
+	}
+
+	// populate the list of items to select with checkboxes
+	@ModelAttribute("formlist")
+	// formlist
 	public List<String> populateAllItems() {
 
 		// Data referencing for checkboxes
 		List<String> formlist = new ArrayList<String>();
-		if (kills!=null)
-		for (Kill kill : kills) 
-			formlist.add("\n"+kill.getWkiLine());
-		else formlist.add("ERROR: KILL LIST IS NULL");
+		if (kills != null)
+			for (Kill kill : kills)
+				formlist.add("\n" + kill.getWkiLine());
+		else
+			formlist.add("ERROR: KILL LIST IS NULL");
 		return formlist;
 	}
-	
+
 	@ModelAttribute("checkedList")
 	public List<String> popCheckedList() {
 
 		List<String> checkedList = new ArrayList<String>();
-		if (this.checked != null) 
-			for (String s:this.checked)
-				checkedList.add("\n"+s);
-		//else System.out.println("ERROR: checked array is NULL.");
+		if (this.checked != null)
+			for (String s : this.checked)
+				checkedList.add("\n" + s);
+		// else System.out.println("ERROR: checked array is NULL.");
 		return checkedList;
 	}
-	
+
 	@ModelAttribute("checkedKillsList")
 	public List<Kill> popCheckedKillsList() {
 		return kills;
-	}	
+	}
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				dateFormat, true));
+	}
+
+	@RequestMapping(value = "/calendar", method = RequestMethod.GET)
+	public String calendar() {
+
+		/*
+		 * //https://developers.google.com/google-apps/calendar/v3/reference/
+		 * calendars/get // Initialize Calendar service with valid OAuth
+		 * credentials Calendar service = new Calendar.Builder(httpTransport,
+		 * jsonFactory, credentials)
+		 * .setApplicationName("calendar-of-veeshan").build();
+		 * 
+		 * // Retrieve the calendar
+		 * com.google.api.services.calendar.model.Calendar calendar =
+		 * service.calendars().get('primary').execute();
+		 * 
+		 * System.out.println(calendar.getSummary());
+		 */
+		
+		//https://stackoverflow.com/questions/13986099/insert-calendarevent-to-other-calendar-than-primary
+
+		return "calendar";
+	}
+	
+	public void authenticate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		//https://stackoverflow.com/questions/13986099/insert-calendarevent-to-other-calendar-than-primary
+	    String scope = "https://www.google.com/calendar/feeds";
+		String redirect_uri = "";
+		String client_id = "";
+	    
+		List <String> scopes = new LinkedList<String>();
+	    scopes.add(scope);
+	    AuthorizationCodeRequestUrl authorize = new GoogleAuthorizationCodeRequestUrl(client_id, redirect_uri, scopes);
+	    authorize.setRedirectUri(redirect_uri);
+	    String authorize_url = authorize.build();
+	    //log.info(authorize_url);
+	    System.out.println("authorize_url:"+authorize_url);
+	    response.sendRedirect(authorize_url);
 	}
 
 }

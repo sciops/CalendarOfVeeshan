@@ -15,12 +15,6 @@
 		to avoid double create the movieController bean.
                 Only controller need this hack.
 	-->
-	<!-- 
-	<context:component-scan base-package="com.monco.calendarofveeshan.controller">
-		<context:exclude-filter type="regex"
-			expression="com.monco.calendarofveeshan.controller.Movie.*" />
-	</context:component-scan>
-	-->
 	<context:component-scan base-package="com.monco.calendarofveeshan.controller">
 		<context:exclude-filter type="regex"
 			expression="com.monco.calendarofveeshan.controller.Kill.*" />
@@ -29,13 +23,6 @@
 	<mvc:annotation-driven />
  
 	<!-- Bean to show you Di in GAE, via Spring, also init the MovieController -->
-	<!-- 
-	<bean class="com.monco.calendarofveeshan.controller.MovieController">
-		<property name="message">
-			<value>Hello World</value>
-		</property>
-	</bean>
-	-->
 	<bean class="com.monco.calendarofveeshan.controller.KillController">
 		<property name="message">
 			<value>Hello World</value>
